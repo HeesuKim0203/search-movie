@@ -22,8 +22,8 @@ const Rating = styled.span`
     bottom : 5px ;
     right : 5px ;
     font-size : 12px ;
-    opacity : 0 ;
     transition : opacity 0.2s ease-in-out ;
+    opacity : 0 ;
 `;
 
 const ImageContainer = styled.div`
@@ -31,7 +31,7 @@ const ImageContainer = styled.div`
     position : relative ;
     &:hover {
         ${Image}{
-            opacity : 0.6 ;
+            opacity : 0.4 ;
         }
         ${Rating}{
             opacity : 1 ;
@@ -42,11 +42,19 @@ const ImageContainer = styled.div`
 const Title = styled.span`
     display : block ;
     margin-bottom : 3px ;
+
+    @media ${props => props.theme.mobileS} {
+        font-size : 14px ;
+    }
 `;
 
 const Year = styled.span`
     font-size : 10px ;
     color : rgba(255, 255, 255, 0.5) ;
+
+    @media ${props => props.theme.mobileS} {
+        font-size : 12px ;
+    }
 `;
 
 const Poster = ({ id, imageUrl, title, rating, year, isMovie = false }) =>

@@ -11,6 +11,7 @@ export const MoviesApi = {
     upcoming : () => api.get(`movie/upcoming?api_key=${KEY}&language=ko-KR`),
     popular : () => api.get(`movie/popular?api_key=${KEY}&language=ko-KR`),
     movieDetail : id => api.get(`movie/${id}?api_key=${KEY}&language=en-US&append_to_response=videos`),
+    getRent : id => api.get(`movie/${id}/watch/providers?api_key=${KEY}&language=ko-KR`),
     search : trem => api.get(`search/movie?api_key=${KEY}&language=ko-KR&query=${encodeURIComponent(trem)}`)
 } ;
 
@@ -19,5 +20,6 @@ export const TVApi = {
     popular : () => api.get(`tv/popular?api_key=${KEY}&language=ko-KR`),
     airingToday : () => api.get(`tv/airing_today?api_key=${KEY}&language=ko-KR`),
     showDetail : id => api.get(`tv/${id}?api_key=${KEY}&language=en-US&append_to_response=videos`),
+    getRent : id => api.get(`tv/${id}/watch/providers?api_key=${KEY}&language=ko-KR`),
     search : trem => api.get(`search/tv?api_key=${KEY}&language=ko-KR&query=${encodeURIComponent(trem)}`)
 } ;

@@ -1,32 +1,58 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components' ;
 import Helmet from 'react-helmet' ;
 
 import Loader from '../../Components/Loader' ;
 import Error from '../../Components/Error' ;
+import { size } from '../../theme' ;
+ 
 
 const Container = styled.div`
     height : calc(100vh - 50px) ;
     width : 100% ;
     position : relative ;
     padding : 50px ;
+
+    margin : 0 auto ;
+
+    @media ${props => props.theme.mobileS} {
+        position : static ;
+        height : none ;
+        padding : 30px ;
+    }
 `;
 
 const VideoContainer = styled.div`
     position : absolute ;
-    width : 70% ;
-    height : 100% ;
+    width : 50% ;
+    height : 50% ;
     padding : 0 5px ;
     z-index : 0 ;
-    top : 0 ;
-    right : 0 ;
+    bottom : 0 ;
+    right : 120px ;
+
+    @media ${props => props.theme.mobileS} {
+        position : static ;
+
+        z-index : 3 ;
+
+        padding : 0 ;
+
+        margin : 30px 0 ;
+
+        width : 100% ;
+        height : 300px ;
+
+        float : left ;
+    }
 `;
 
 const Backdrop = styled.div`
     position : absolute ;
     top : 0 ;
     left : 0 ;
+    z-index : -3 ;
     width : 100% ;
     height : 100% ;
     background-image : url(${props => props.bgImage}) ;
@@ -37,35 +63,57 @@ const Backdrop = styled.div`
 `;
 
 const Data = styled.div`
-    width : 28% ;
+    width : 50% ;
     margin-left : 10px ;
     position : absolute ;
-    top : 10px ;
-    left : 0 ;
-    opacity : 0 ;
+    left : 600px ;
+    top : 0 ;
+    z-index : 2 ;
+    background-color : ${props => props.backgroundColor} ; 
+
+    display : ${props => props.display} ;
+
+    @media ${props => props.theme.mobileS} {
+        position : static ;
+
+        width : 100% ;
+        height : 100% ;
+
+        float : left ;
+
+        padding : 10px ;
+        margin-left : 0 ;
+    }
 `;
 
 const Cover = styled.div`
-    width : 30% ;
+    width : 40% ;
     height : 100% ;
     background-image : url(${props => props.bgImage}) ;
     background-position : center center ;
     background-size : cover ;
+
+    @media ${props => props.theme.mobileS} {
+        float : left ;
+        width : 100% ;
+        height : 100% ;
+    }
 `;
 
 const Content = styled.div`
     display : flex ;
-    width : 100% ;
+    width : 80% ;
     height : 100% ;
     position : relative ;  
     z-index : 1 ;
-    &:hover {
-        ${Data} {
-            opacity : 1 ;
-        }
-        ${Cover} {
-            filter : brightness(20%) ; 
-        }
+
+    margin : 0 auto ;
+
+    @media ${props => props.theme.mobileS} {
+        width : 100% ;
+        height : 500px ;
+        overflow : hidden ;
+        height : none ;
     }
 `;
 
@@ -74,12 +122,21 @@ const Title = styled.h3`
     margin-bottom : 20px ;
     position : relative ;
     z-index : 1 ;
+
+    @media ${props => props.theme.mobileS} {
+        font-size : 18px ;
+        margin-bottom : 10px ;
+    }
 `;
 
 const ItemContainer = styled.div`
     margin-bottom : 20px ;
     position : relative ;
     z-index : 1 ;
+
+    @media ${props => props.theme.mobileS} {
+        font-size : 11px ;
+    }
 `;
 
 const Item = styled.span`
@@ -93,10 +150,13 @@ const Divider = styled.span`
 const OverView = styled.p`
     position : relative ;
     font-size : 12px ;
-    opacity : 0.8 ;
     line-height : 1.5 ;
     margin-bottom : 10px ;
     z-index : 1 ;
+
+    @media ${props => props.theme.mobileS} {
+        font-size : 11px ;
+    }
 `;
 
 const Video = styled.iframe`
@@ -104,7 +164,142 @@ const Video = styled.iframe`
     height : 100% ;
 `;
 
-const DetailPresenter = ({ result, loading, error }) => (
+const RentUl = styled.ul`
+    display : flex ;
+    align-items : center ;
+
+    margin-top : 30px ;
+
+    @media ${props => props.theme.mobileS} {
+        margin-top : 10px ;
+        float : left ;
+    }
+`;
+
+const RentLi = styled.li`
+    display : flex ;
+
+    flex-direction : column ;
+    justify-content : center ;
+    align-items : center ;
+
+    &:not(:last-child) {
+        margin-right : 30px ;
+    }
+
+    @media ${props => props.theme.mobileS} {
+
+        &:not(:last-child) {
+            margin-right : 10px ;
+        }
+    }
+`;
+
+const RentTitle = styled.div`
+    width : 100% ;
+
+    text-align : center ;
+
+    @media ${props => props.theme.mobileS} {
+        font-size : 10px ;
+    }
+`;
+
+const LogoImageWrapper = styled.div`
+    width : 100% ;
+    height : 80px ;
+    
+    display : flex ;
+
+    align-items : center ;
+    justify-content : center ;
+
+    float : left ;
+`;
+
+const LogoImage = styled.div`
+    margin-top : 20px ;
+
+    width : 70px ;
+    height : 70px ;
+
+    border-radius : 70px ;
+
+    background-image : url(${props => props.bgImage}) ;
+    background-position : center center ;
+    background-size : 70px 70px ;
+
+    @media ${props => props.theme.mobileS} {
+        width : 40px ;
+        height : 40px ;
+        margin-top : 0 ;
+
+        border-radius : 40px ;
+        background-size : 40px 40px ;
+    }
+`;
+
+const DetailPresenter = ({ result, resultRent, loading, error }) => {
+
+    const { mobileS } = size ;
+
+    const [ canSee, setCanSee] = useState([]) ;
+    const [ mode468px, setMode468px ] = useState(false) ;
+    const [ css, setCss ] = useState(true) ;
+
+    function clickCover(e) {
+        e.nativeEvent.stopImmediatePropagation() ;
+        setCss(true) ;
+    }
+
+    function clickData(e) {
+        e.nativeEvent.stopImmediatePropagation() ;
+
+        setCss(false) ;
+    }
+
+    const viewContentNumCheck = innerWidth => {
+        if( innerWidth <= mobileS ) {
+            setMode468px(true) ;
+            setCss(false) ;
+        }else if( innerWidth > mobileS ) {
+            setMode468px(false) ;
+            setCss(true) ;
+        }
+    }
+
+    const onResize = (e) => {
+        const { currentTarget : { innerWidth } } = e ;
+
+        viewContentNumCheck(innerWidth) ;
+    }
+
+    useEffect(() => {
+
+        const { innerWidth } = window ;
+
+        viewContentNumCheck(innerWidth) ;
+
+        window.addEventListener('resize', onResize, false) ;
+    
+        return () => {
+          window.removeEventListener('resize', onResize, false) ;
+        }
+      }, []) ;
+
+    useEffect(() => {
+
+        if (resultRent && resultRent.KR && resultRent.KR.flatrate && resultRent.KR.buy) {
+            setCanSee([...resultRent.KR.flatrate, ...resultRent.KR.buy]) ;
+        }else if(resultRent && resultRent.KR && resultRent.KR.buy) {
+            setCanSee([...resultRent.KR.buy]) ;
+        }else if (resultRent && resultRent.KR && resultRent.KR.flatrate) {
+            setCanSee([...resultRent.KR.flatrate]) ;
+        }
+
+    }, [resultRent]) ;
+
+    return (
     <>
         <Helmet>
             <title>Detail | I flix</title>
@@ -119,8 +314,13 @@ const DetailPresenter = ({ result, loading, error }) => (
                     bgImage={result.poster_path ? 
                         `https://image.tmdb.org/t/p/original${result.poster_path}` 
                         : require("../../assets/noPoster.jpg")}
-                />
-                <Data>
+                    onTouchStartCapture={ mode468px ? clickCover : null}
+                >
+                <Data 
+                    display={ css ? 'block' : 'none' }
+                    backgroundColor={ mode468px ? 'rgba(0, 0, 0, 0.8)' : 'none' }
+                    onTouchStartCapture={ mode468px ? clickData : null}
+                >
                     <Title>{result.original_title ? result.original_title : result.original_name}</Title>
                     <ItemContainer>
                         <Item>
@@ -145,19 +345,36 @@ const DetailPresenter = ({ result, loading, error }) => (
                         </Item>
                     </ItemContainer>
                     <OverView>{result.overview}</OverView>
+                    <RentUl>
+                        {canSee && canSee.map((data, index) =>
+                            <RentLi key={index}>
+                                <RentTitle>{data.provider_name}</RentTitle>
+                                <LogoImageWrapper>
+                                    <LogoImage bgImage={`https://image.tmdb.org/t/p/original${data.logo_path}`}/>
+                                </LogoImageWrapper>
+                            </RentLi>)}
+                    </RentUl>
                 </Data>
-                <VideoContainer>
+                </Cover>
+                {mode468px ? null : <VideoContainer>
                         <Video 
                             src={ result.videos.results &&  result.videos.results.length > 0 &&`https://www.youtube.com/embed/${result.videos.results[0].key}`} 
                             frameborder = "0"
                             allowfullscreen
                         />
-                </VideoContainer>
+                </VideoContainer>}
             </Content>
+            {mode468px ? <VideoContainer>
+                        <Video 
+                            src={ result.videos.results &&  result.videos.results.length > 0 &&`https://www.youtube.com/embed/${result.videos.results[0].key}`} 
+                            frameborder = "0"
+                            allowfullscreen
+                        />
+                </VideoContainer> : null }
             { error && <Error text={error} color="red"/> }
         </Container>)}
     </>
-) ;
+)} ;
 
 DetailPresenter.propTypes = {
     result : PropTypes.object,

@@ -15,6 +15,10 @@ const Header = styled.header`
     background-color : rgba(20, 20, 20, 0.8) ;
     box-shadow: 0 1px 5px 2px rgba(0, 0, 0, 0.8);
     z-index : 100 ;
+
+    @media ${props => props.theme.mobileS} {
+        justify-content : center ;
+    }
 ` ;
 
 const List = styled.ul`
@@ -25,8 +29,12 @@ const Item = styled.li`
     width : 80px ;
     height : 50px ;
     border-bottom : 4px solid 
-        ${ props => props.current ? "#3498db" : "transparent" } ;
+        ${ props => props.current ? "#00695c" : "transparent" } ;
     transition : border-bottom 0.4s ease-in-out ;
+
+    @media ${props => props.theme.mobileS} {
+        font-size : 15px ;
+    }
 `;
 
 const Rlink = styled(Link)` 

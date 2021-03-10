@@ -5,6 +5,7 @@ import Home from '../Routes/Home' ;
 import Search from '../Routes/Search' ;
 import Tv from '../Routes/Tv' ;
 import Detail from '../Routes/Detail'
+import FixedMenu from '../Components/FixedMenu' ;
 
 import Header from './Header' ;
 
@@ -19,5 +20,6 @@ export default () => (
             <Route path="/show/:id" component={Detail} />
             <Redirect from="*" to="/" />
         </Switch>
+        <FixedMenu />
     </Router>
 ) ;

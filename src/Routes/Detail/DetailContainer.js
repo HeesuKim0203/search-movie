@@ -9,6 +9,7 @@ export default class DetailContaniner extends Component {
             location : { pathname }
         } = props ;
         this.state = {
+            resultRent : null,
             result : null,
             loading : true,
             error : null, 
@@ -30,23 +31,47 @@ export default class DetailContaniner extends Component {
             return push("/") ;
         
         let result = null ;
+        let resultRent = null ;
         try {
             if(isMovie) {
-                ({
-                    data : result
-                } = await MoviesApi.movieDetail(parseId)) ;
+                const {
+                    data
+                } = await MoviesApi.movieDetail(parseId) ;
+
+                result = data ;
+                
+                const { 
+                    data : { 
+                        results
+                    } 
+                } = await MoviesApi.getRent(parseId) ;
+
+                resultRent = results ;
             }else {
-                ({
-                    data : result
-                } = await TVApi.showDetail(parseId)) ;
+                const {
+                    data
+                } = await TVApi.showDetail(parseId) ;
+
+                result = data ;
+
+                const { 
+                    data : { 
+                        results
+                    } 
+                } = await TVApi.getRent(parseId) ;
+
+                resultRent = results ;
             }
-            console.log(result.videos.results[0]) ;
+
             this.setState({
+                resultRent : resultRent || null,
                 result
-            }) ;
+            })
+
         }catch {
             this.setState({
-                error : "Can't find anything."
+                error : "Can't find anything.",
+                loading : false
             }) ;
         }finally {
             this.setState({ 
@@ -55,9 +80,11 @@ export default class DetailContaniner extends Component {
         }
     }
     render() {
-        const { result, loading, error } = this.state ;
+        const { result, loading, error, resultRent } = this.state ;
+
         return (
             <DetailPresenter 
+                resultRent = { resultRent }
                 result = { result }
                 loading = { loading }
                 error = { error }

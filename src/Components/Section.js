@@ -11,6 +11,11 @@ const Container = styled.div`
 const Title = styled.span`
     font-size : 14px ;
     font-weight : 600 ;
+
+    @media ${props => props.theme.mobileS} {
+        display : block ;
+        text-align : center ;
+    }
 ` ;
 
 const Grid = styled.div`
@@ -18,6 +23,10 @@ const Grid = styled.div`
     display : grid ;
     grid-template-columns : repeat(auto-fill, 125px) ;
     grid-gap : 25px ;
+
+    @media ${props => props.theme.mobileS} {
+        justify-content : center ;
+    }
 ` ;
 
 const Section = ({ title, children }) => (
