@@ -6,6 +6,7 @@ import Section from '../../Components/Section' ;
 import Loader from '../../Components/Loader' ;
 import Error from '../../Components/Error' ;
 import Poster from '../../Components/Poster' ;
+import { Helmet } from 'react-helmet';
 
 const Container = styled.div`
     padding : 20px ;
@@ -18,6 +19,9 @@ const TVPresenter = ({
     loading, 
     error }) =>  (
     <>
+        <Helmet>
+            <title>TV | Search Media</title>
+        </Helmet>
         {loading ? <Loader/> : (
             <Container>
                 { topRated && topRated.length > 0 && (

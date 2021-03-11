@@ -247,21 +247,30 @@ const DetailPresenter = ({ result, resultRent, loading, error }) => {
     const [ mode468px, setMode468px ] = useState(false) ;
     const [ css, setCss ] = useState(true) ;
     const [ touchMove, setTouchMove ] = useState(false) ;
+    const [ touchMoveData, setTouchMoveData ] = useState(false) ;
 
     function touchMoveInit(e) {
+        e.stopPropagation() ;
+
         setTouchMove(true) ;
     }
 
-    function clickCover(e) {
-        e.nativeEvent.stopImmediatePropagation() ;
+    function touchMoveInitData(e) {
+        e.stopPropagation() ;
 
-        return touchMove ? setTouchMove(false) : setCss(true) ;
+        setTouchMoveData(true) ;
+    }
+
+    function clickCover(e) {
+        e.stopPropagation() ;
+
+        touchMove ? setTouchMove(false) : setCss(true) ;
     }
 
     function clickData(e) {
-       e.nativeEvent.stopImmediatePropagation() ; 
+        e.stopPropagation() ;
 
-       return touchMove ? setTouchMove(false) : setCss(false) ;
+        touchMoveData ? setTouchMoveData(false) : setCss(false) ;
     }
 
     const viewContentNumCheck = innerWidth => {
@@ -287,6 +296,7 @@ const DetailPresenter = ({ result, resultRent, loading, error }) => {
         viewContentNumCheck(innerWidth) ;
 
         window.addEventListener('resize', onResize, false) ;
+        
     
         return () => {
           window.removeEventListener('resize', onResize, false) ;
@@ -308,7 +318,7 @@ const DetailPresenter = ({ result, resultRent, loading, error }) => {
     return (
     <>
         <Helmet>
-            <title>Detail | I flix</title>
+            <title>Detail | Search Media </title>
         </Helmet>
         {loading ? <Loader/> : (
         <Container>
@@ -320,13 +330,14 @@ const DetailPresenter = ({ result, resultRent, loading, error }) => {
                     bgImage={result.poster_path ? 
                         `https://image.tmdb.org/t/p/original${result.poster_path}` 
                         : require("../../assets/noPoster.jpg")}
-                    onTouchMoveCapture={ touchMoveInit }
-                    onTouchEndCapture={ mode468px ? clickCover : null }
+                    onTouchMove={ touchMoveInit }
+                    onTouchEnd={ mode468px ? clickCover : null }
                 >
                 <Data 
                     display={ css ? 'block' : 'none' }
                     backgroundColor={ mode468px ? 'rgba(0, 0, 0, 0.8)' : 'none' }
-                    onTouchEnd={ mode468px ? clickData : null}
+                    onTouchMove={ touchMoveInitData }
+                    onTouchEnd={ mode468px ? clickData : null }
                 >
                     <Title>{result.original_title ? result.original_title : result.original_name}</Title>
                     <ItemContainer>
