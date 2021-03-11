@@ -75,7 +75,6 @@ const SearchPresenter = ({
 SearchPresenter.propTypes = {
     movieResults : PropTypes.array,
     tvResults : PropTypes.array,
-    searchTerm : PropTypes.string.isRequired,
     loading : PropTypes.bool.isRequired,
     error : PropTypes.string,
     handleSubmit : PropTypes.func.isRequired,

@@ -246,16 +246,22 @@ const DetailPresenter = ({ result, resultRent, loading, error }) => {
     const [ canSee, setCanSee] = useState([]) ;
     const [ mode468px, setMode468px ] = useState(false) ;
     const [ css, setCss ] = useState(true) ;
+    const [ touchMove, setTouchMove ] = useState(false) ;
+
+    function touchMoveInit(e) {
+        setTouchMove(true) ;
+    }
 
     function clickCover(e) {
         e.nativeEvent.stopImmediatePropagation() ;
-        setCss(true) ;
+
+        return touchMove ? setTouchMove(false) : setCss(true) ;
     }
 
     function clickData(e) {
-        e.nativeEvent.stopImmediatePropagation() ;
+       e.nativeEvent.stopImmediatePropagation() ; 
 
-        setCss(false) ;
+       return touchMove ? setTouchMove(false) : setCss(false) ;
     }
 
     const viewContentNumCheck = innerWidth => {
@@ -314,12 +320,13 @@ const DetailPresenter = ({ result, resultRent, loading, error }) => {
                     bgImage={result.poster_path ? 
                         `https://image.tmdb.org/t/p/original${result.poster_path}` 
                         : require("../../assets/noPoster.jpg")}
-                    onTouchStartCapture={ mode468px ? clickCover : null}
+                    onTouchMoveCapture={ touchMoveInit }
+                    onTouchEndCapture={ mode468px ? clickCover : null }
                 >
                 <Data 
                     display={ css ? 'block' : 'none' }
                     backgroundColor={ mode468px ? 'rgba(0, 0, 0, 0.8)' : 'none' }
-                    onTouchStartCapture={ mode468px ? clickData : null}
+                    onTouchEnd={ mode468px ? clickData : null}
                 >
                     <Title>{result.original_title ? result.original_title : result.original_name}</Title>
                     <ItemContainer>
