@@ -9,8 +9,15 @@ export default class extends Component {
         popular : null,
         error : null,
         loading : true,
+        nowPlayingIdList : null,
+        upcomingIdLlist : null,
+        popularIdList : null,
+        
     } ;
     async componentDidMount() {
+
+        const { setIdArr } = this ;
+
         try {
             const {
                 data : { results : nowPlaying }
@@ -23,6 +30,9 @@ export default class extends Component {
             } = await MoviesApi.popular() ;
 
             this.setState({ 
+                nowPlayingIdList : setIdArr(nowPlaying),
+                upcomingIdLlist : setIdArr(upcoming),
+                popularIdList : setIdArr(popular),
                 nowPlaying,
                 upcoming,
                 popular 
@@ -37,10 +47,28 @@ export default class extends Component {
             }) ; 
         }
     } ;
+
+    setIdArr = arr => {
+        return arr.map(data => data.id) ;
+    }
+
     render() {
-        const { nowPlaying, upcoming, popular, error, loading } = this.state ;
+        const { 
+            nowPlayingIdList,
+            upcomingIdLlist,
+            popularIdList,
+            nowPlaying, 
+            upcoming, 
+            popular, 
+            error, 
+            loading
+        } = this.state ;
+
         return (
             <HomePresenter
+                nowPlayingIdList = { nowPlayingIdList }
+                upcomingIdLlist = { upcomingIdLlist }
+                popularIdList = { popularIdList }
                 nowPlaying = { nowPlaying }
                 upcoming = { upcoming }
                 popular = { popular }

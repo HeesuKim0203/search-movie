@@ -13,6 +13,9 @@ const Container = styled.div`
 `;
 
 const TVPresenter = ({ 
+    topRatedIdList,
+    popularIdList,
+    airingTodayIdList,
     topRated, 
     popular, 
     airingToday, 
@@ -34,6 +37,7 @@ const TVPresenter = ({
                                 imageUrl = {show.poster_path}
                                 rating = {show.vote_average}
                                 year = {show.first_air_date && show.first_air_date.substring(0, 4)}
+                                idList = { topRatedIdList }
                             />
                         ))}
                     </Section>
@@ -48,6 +52,7 @@ const TVPresenter = ({
                                 imageUrl = {show.poster_path}
                                 rating = {show.vote_average}
                                 year = {show.first_air_date && show.first_air_date.substring(0, 4)}
+                                idList = {  popularIdList }
                             />
                         ))}
                     </Section>
@@ -62,6 +67,7 @@ const TVPresenter = ({
                                 imageUrl = {show.poster_path}
                                 rating = {show.vote_average}
                                 year = {show.first_air_date && show.first_air_date.substring(0, 4)}
+                                idList = { airingTodayIdList }
                         />))}
                     </Section>
                 )}

@@ -4,6 +4,8 @@ import { MoviesApi, TVApi } from '../../api' ;
 
 export default class SearchContainer extends Component {
     state = {
+        movieResultsIdList : null,
+        showResultsIdList : null,
         movieResults : null,
         showResults : null,
         searchTerm : '',
@@ -23,6 +25,8 @@ export default class SearchContainer extends Component {
     } ;
     searchByTerm = async() => {
         const { searchTerm } = this.state ;
+        const { setIdArr } = this ;
+
         try {
             const {
                 data : { results : movieResults }
@@ -31,6 +35,8 @@ export default class SearchContainer extends Component {
                 data : { results : showResults }
             } = await TVApi.search(searchTerm) ;
             this.setState({ 
+                movieResultsIdList : setIdArr(movieResults),
+                showResultsIdList : setIdArr(showResults),
                 movieResults,
                 showResults,
                 loading : true 
@@ -45,10 +51,17 @@ export default class SearchContainer extends Component {
             }) ;
         }
     }
+
+    setIdArr = arr => {
+        return arr.map(data => data.id) ;
+    }
+
    render() { 
-       const { movieResults, showResults, loading, error } = this.state ;
+       const { movieResultsIdList, showResultsIdList, movieResults, showResults, loading, error } = this.state ;
         return (
             <SearchPresenter 
+                movieResultsIdList = { movieResultsIdList }
+                showResultsIdList = { showResultsIdList }
                 movieResults = { movieResults }
                 showResults = { showResults }
                 error = { error }

@@ -17,7 +17,10 @@ const HomePresenter = ({
     upcoming, 
     popular, 
     error, 
-    loading }) => 
+    loading,
+    nowPlayingIdList,
+    upcomingIdLlist,
+    popularIdList }) => 
     (<>
         <Helmet>
             <title>Movie | Search Media</title>
@@ -34,6 +37,7 @@ const HomePresenter = ({
                         imageUrl = {movie.poster_path}
                         rating = {movie.vote_average}
                         year = {movie.release_date && movie.release_date.substring(0, 4)}
+                        idList = {nowPlayingIdList}
                         isMovie = {true}
                     />
                 ))}
@@ -49,6 +53,7 @@ const HomePresenter = ({
                         imageUrl = {movie.poster_path}
                         rating = {movie.vote_average}
                         year = {movie.release_date && movie.release_date.substring(0, 4)}
+                        idList = {upcomingIdLlist}
                         isMovie = {true}
                     />
                 ))}
@@ -64,6 +69,7 @@ const HomePresenter = ({
                         imageUrl = {movie.poster_path}
                         rating = {movie.vote_average}
                         year = {movie.release_date && movie.release_date.substring(0, 4)}
+                        idList = {popularIdList}
                         isMovie = {true}
                     />
                 ))}

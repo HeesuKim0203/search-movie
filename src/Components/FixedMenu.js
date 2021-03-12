@@ -9,6 +9,8 @@ const Container = styled.div`
 
     bottom : 5px ;
     right : 5px ;
+
+    z-index : 100 ;
 `;
 
 const FixedMenu = () => {

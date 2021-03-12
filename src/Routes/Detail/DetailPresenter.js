@@ -3,11 +3,17 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components' ;
 import Helmet from 'react-helmet' ;
 
+import { Swiper, SwiperSlide } from 'swiper/react' ;
+
+import SwiperCore from 'swiper' ;
+import 'swiper/swiper-bundle.css' ;
+
 import Loader from '../../Components/Loader' ;
 import Error from '../../Components/Error' ;
 import { size } from '../../theme' ;
- 
 
+SwiperCore.use([]) ;
+ 
 const Container = styled.div`
     height : calc(100vh - 50px) ;
     width : 100% ;
@@ -239,11 +245,14 @@ const LogoImage = styled.div`
     }
 `;
 
-const DetailPresenter = ({ result, resultRent, loading, error }) => {
+const DetailPresenter = ({ 
+    slideId,
+    slideLoadData,
+    loading, 
+    error
+    }) => {
 
     const { mobileS } = size ;
-
-    const [ canSee, setCanSee] = useState([]) ;
     const [ mode468px, setMode468px ] = useState(false) ;
     const [ css, setCss ] = useState(true) ;
     const [ touchMove, setTouchMove ] = useState(false) ;
@@ -303,94 +312,105 @@ const DetailPresenter = ({ result, resultRent, loading, error }) => {
         }
       }, []) ;
 
-    useEffect(() => {
-
-        if (resultRent && resultRent.KR && resultRent.KR.flatrate && resultRent.KR.buy) {
-            setCanSee([...resultRent.KR.flatrate, ...resultRent.KR.buy]) ;
-        }else if(resultRent && resultRent.KR && resultRent.KR.buy) {
-            setCanSee([...resultRent.KR.buy]) ;
-        }else if (resultRent && resultRent.KR && resultRent.KR.flatrate) {
-            setCanSee([...resultRent.KR.flatrate]) ;
-        }
-
-    }, [resultRent]) ;
-
     return (
     <>
         <Helmet>
             <title>Detail | Search Media </title>
         </Helmet>
         {loading ? <Loader/> : (
-        <Container>
-            <Backdrop 
-                bgImage={`https://image.tmdb.org/t/p/original${result.backdrop_path}`}
-            />
-            <Content>
-                <Cover  
-                    bgImage={result.poster_path ? 
-                        `https://image.tmdb.org/t/p/original${result.poster_path}` 
-                        : require("../../assets/noPoster.jpg")}
-                    onTouchMove={ touchMoveInit }
-                    onTouchEnd={ mode468px ? clickCover : null }
-                >
-                <Data 
-                    display={ css ? 'block' : 'none' }
-                    backgroundColor={ mode468px ? 'rgba(0, 0, 0, 0.8)' : 'none' }
-                    onTouchMove={ touchMoveInitData }
-                    onTouchEnd={ mode468px ? clickData : null }
-                >
-                    <Title>{result.original_title ? result.original_title : result.original_name}</Title>
-                    <ItemContainer>
-                        <Item>
-                            {result.release_date ? 
-                            result.release_date.substring(0, 7)
-                            : result.first_air_date.substring(0, 7)}
-                        </Item>
-                        <Divider>.</Divider>
-                        <Item>
-                            {result.runtime ? 
-                            result.runtime 
-                            : result.episode_run_time}분
-                        </Item>
-                        <Divider>.</Divider>
-                        <Item>
-                            {result.genres && 
-                            result.genres.map((genre, index) => 
-                                index === result.genres.length - 1 ? 
-                                genre.name 
-                                : `${genre.name} / `
-                            )}
-                        </Item>
-                    </ItemContainer>
-                    <OverView>{result.overview}</OverView>
-                    <RentUl>
-                        {canSee && canSee.map((data, index) =>
-                            <RentLi key={index}>
-                                <RentTitle>{data.provider_name}</RentTitle>
-                                <LogoImageWrapper>
-                                    <LogoImage bgImage={`https://image.tmdb.org/t/p/original${data.logo_path}`}/>
-                                </LogoImageWrapper>
-                            </RentLi>)}
-                    </RentUl>
-                </Data>
-                </Cover>
-                {mode468px ? null : <VideoContainer>
-                        <Video 
-                            src={ result.videos.results &&  result.videos.results.length > 0 &&`https://www.youtube.com/embed/${result.videos.results[0].key}`} 
-                            frameborder = "0"
-                            allowfullscreen
-                        />
-                </VideoContainer>}
-            </Content>
-            {mode468px ? <VideoContainer>
-                        <Video 
-                            src={ result.videos.results &&  result.videos.results.length > 0 &&`https://www.youtube.com/embed/${result.videos.results[0].key}`} 
-                            frameborder = "0"
-                            allowfullscreen
-                        />
-                </VideoContainer> : null }
-            { error && <Error text={error} color="red"/> }
-        </Container>)}
+            <Swiper
+                spaceBetween = { 30 }
+                initialSlide = { slideId }
+            >
+                { slideLoadData && slideLoadData.map(( data, index ) =>  {
+
+                    const { result, resultRent } = data ;
+                    let canSee = null ;
+
+                    if (resultRent && resultRent.KR && resultRent.KR.flatrate && resultRent.KR.buy) {
+                        canSee = [...resultRent.KR.flatrate, ...resultRent.KR.buy] ;
+                    }else if(resultRent && resultRent.KR && resultRent.KR.buy) {
+                        canSee = [...resultRent.KR.buy] ;
+                    }else if (resultRent && resultRent.KR && resultRent.KR.flatrate) {
+                        canSee = [...resultRent.KR.flatrate] ;
+                    }
+                    
+                    return (
+                        <SwiperSlide key={index} width="none" height="none">
+                            <Container>
+                                <Backdrop 
+                                    bgImage={`https://image.tmdb.org/t/p/original${result.backdrop_path}`}
+                                />
+                                <Content>
+                                    <Cover  
+                                        bgImage={result.poster_path ? 
+                                            `https://image.tmdb.org/t/p/original${result.poster_path}` 
+                                            : require("../../assets/noPoster.jpg")}
+                                        onTouchMove={ touchMoveInit }
+                                        onTouchEnd={ mode468px ? clickCover : null }
+                                    >
+                                    <Data 
+                                        display={ css ? 'block' : 'none' }
+                                        backgroundColor={ mode468px ? 'rgba(0, 0, 0, 0.8)' : 'none' }
+                                        onTouchMove={ touchMoveInitData }
+                                        onTouchEnd={ mode468px ? clickData : null }
+                                    >
+                                        <Title>{result.original_title ? result.original_title : result.original_name}</Title>
+                                        <ItemContainer>
+                                            <Item>
+                                                {result.release_date ? 
+                                                result.release_date.substring(0, 7)
+                                                : result.first_air_date.substring(0, 7)}
+                                            </Item>
+                                            <Divider>.</Divider>
+                                            <Item>
+                                                {result.runtime ? 
+                                                result.runtime 
+                                                : result.episode_run_time}분
+                                            </Item>
+                                            <Divider>.</Divider>
+                                            <Item>
+                                                {result.genres && 
+                                                result.genres.map((genre, index) => 
+                                                    index === result.genres.length - 1 ? 
+                                                    genre.name 
+                                                    : `${genre.name} / `
+                                                )}
+                                            </Item>
+                                        </ItemContainer>
+                                        <OverView>{result.overview}</OverView>
+                                        <RentUl>
+                                            {canSee && canSee.map((data, index) =>
+                                                <RentLi key={index}>
+                                                    <RentTitle>{data.provider_name}</RentTitle>
+                                                    <LogoImageWrapper>
+                                                        <LogoImage bgImage={`https://image.tmdb.org/t/p/original${data.logo_path}`}/>
+                                                    </LogoImageWrapper>
+                                                </RentLi>)}
+                                        </RentUl>
+                                    </Data>
+                                    </Cover>
+                                    { mode468px ? null : <VideoContainer>
+                                            <Video 
+                                                src={ result.videos.results &&  result.videos.results.length > 0 &&`https://www.youtube.com/embed/${result.videos.results[0].key}`} 
+                                                frameborder = "0"
+                                                allowfullscreen
+                                            />
+                                    </VideoContainer>}
+                                </Content>
+                                { mode468px ? <VideoContainer>
+                                            <Video 
+                                                src={ result.videos.results &&  result.videos.results.length > 0 &&`https://www.youtube.com/embed/${result.videos.results[0].key}`} 
+                                                frameborder = "0"
+                                                allowfullscreen
+                                            />
+                                    </VideoContainer> : null }
+                                { error && <Error text={error} color="red"/> }
+                            </Container>
+                        </SwiperSlide>
+                    )
+                })}
+        </Swiper>)}
     </>
 )} ;
 

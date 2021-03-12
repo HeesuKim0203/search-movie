@@ -8,9 +8,15 @@ export default class TVcontainer extends Component {
         popular : null,
         airingToday : null,
         loading : true,
-        error : null
+        error : null,
+        topRatedIdList : null,
+        popularIdList : null,
+        airingTodayIdList : null
     }
     async componentDidMount() {
+
+        const { setIdArr } = this ;
+
         try {
             const {
                 data : { results : topRated }
@@ -22,6 +28,9 @@ export default class TVcontainer extends Component {
                 data : { results : airingToday }
             } = await TVApi.airingToday() ;
             this.setState({
+                topRatedIdList : setIdArr(topRated),
+                popularIdList : setIdArr(popular),
+                airingTodayIdList : setIdArr(airingToday),
                 topRated,
                 popular,
                 airingToday
@@ -36,10 +45,18 @@ export default class TVcontainer extends Component {
             }) ;
         }
     }
+
+    setIdArr = arr => {
+        return arr.map(data => data.id) ;
+    }
+
    render() { 
-       const { topRated, popular, airingToday, loading, error } = this.state ;
+       const { topRatedIdList, popularIdList, airingTodayIdList, topRated, popular, airingToday, loading, error } = this.state ;
         return (
             <TVPresenter 
+                topRatedIdList = { topRatedIdList }
+                popularIdList = { popularIdList }
+                airingTodayIdList = { airingTodayIdList }
                 topRated = { topRated }
                 popular = { popular }
                 airingToday = { airingToday }

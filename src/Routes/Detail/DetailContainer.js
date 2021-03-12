@@ -6,18 +6,26 @@ export default class DetailContaniner extends Component {
     constructor(props) {
         super(props) ;
         const {
-            location : { pathname }
+            location : { 
+                pathname,  
+                state : { idList }
+            },
         } = props ;
+
+        this.idList = idList ;
+
         this.state = {
-            resultRent : null,
-            result : null,
             loading : true,
             error : null, 
             isMovie : pathname.includes('/movie/'),
+            slideLoadData : null,
+            slideId : null
         } ;
     }
-    async componentDidMount() {
+
+    getDataAxios = async () => {
         const { isMovie } = this.state ;
+        const { idList } = this ;
         const { 
             match : {
                 params : { id }
@@ -30,48 +38,59 @@ export default class DetailContaniner extends Component {
         if(isNaN(parseId))
             return push("/") ;
         
-        let result = null ;
-        let resultRent = null ;
+        let arr = [];
         try {
             if(isMovie) {
-                const {
-                    data
-                } = await MoviesApi.movieDetail(parseId) ;
-
-                result = data ;
                 
-                const { 
-                    data : { 
-                        results
-                    } 
-                } = await MoviesApi.getRent(parseId) ;
+                for(let i = 0 ; i < idList.length ; i++) {
+                    const {
+                        data
+                    } = await MoviesApi.movieDetail(idList[i]) ;
+                    
+                    const { 
+                        data : { 
+                            results
+                        } 
+                    } = await MoviesApi.getRent(idList[i]) ;
+            
+                    const dataObj = {
+                        result : data,
+                        resultRent : results
+                    }
+            
+                    arr.push(dataObj) ;
+                }
 
-                resultRent = results ;
             }else {
-                const {
-                    data
-                } = await TVApi.showDetail(parseId) ;
 
-                result = data ;
-
-                const { 
-                    data : { 
-                        results
-                    } 
-                } = await TVApi.getRent(parseId) ;
-
-                resultRent = results ;
+                for(let i = 0 ; i < idList.length ; i++) {
+                    const {
+                        data
+                    } = await TVApi.showDetail(idList[i]) ;
+                    
+                    const { 
+                        data : { 
+                            results
+                        } 
+                    } = await TVApi.getRent(idList[i]) ;
+            
+                    const dataObj = {
+                        result : data,
+                        resultRent : results
+                    }
+            
+                    arr.push(dataObj) ;
+                }
             }
 
             this.setState({
-                resultRent : resultRent || null,
-                result
+                slideLoadData : arr,
+                slideId : id
             })
 
         }catch {
             this.setState({
                 error : "Can't find anything.",
-                loading : false
             }) ;
         }finally {
             this.setState({ 
@@ -79,13 +98,25 @@ export default class DetailContaniner extends Component {
             }) ;
         }
     }
+
+    componentWillUnmount() {
+        this.setState({
+            slideLoadData : []
+        })
+    }
+
+    componentDidMount() {
+        this.getDataAxios() ;
+    }
+
     render() {
-        const { result, loading, error, resultRent } = this.state ;
+        const { loading, error, slideLoadData, slideId } = this.state ;
+        const { idList } = this ;
 
         return (
             <DetailPresenter 
-                resultRent = { resultRent }
-                result = { result }
+                slideLoadData = { slideLoadData }
+                slideId = { idList.findIndex(idData => idData === Number(slideId)) }
                 loading = { loading }
                 error = { error }
             />

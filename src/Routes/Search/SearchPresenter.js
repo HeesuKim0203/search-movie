@@ -24,6 +24,8 @@ const Input = styled.input`
 `;
 
 const SearchPresenter = ({ 
+    movieResultsIdList,
+    showResultsIdList,
     movieResults, 
     showResults, 
     loading, 
@@ -49,6 +51,7 @@ const SearchPresenter = ({
                                 rating = {movie.vote_average}
                                 year = {movie.release_date && movie.release_date.substring(0, 4)}
                                 isMovie = {true}
+                                idList={movieResultsIdList}
                             />
                         ))}
                     </Section>}
@@ -62,6 +65,7 @@ const SearchPresenter = ({
                                 imageUrl = {show.poster_path}
                                 rating = {show.vote_average}
                                 year = {show.first_air_date && show.first_air_date.substring(0, 4)}
+                                idList = { showResultsIdList }
                             />
                         ))}
                     </Section>}
