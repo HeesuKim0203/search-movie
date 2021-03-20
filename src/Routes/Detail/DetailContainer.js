@@ -1,8 +1,8 @@
-import React, { Component } from 'react' ;
+import React, { Component, memo } from 'react' ;
 import DetailPresenter from './DetailPresenter' ;
 import { MoviesApi, TVApi } from '../../api';
 
-export default class DetailContaniner extends Component {
+export default memo(class DetailContaniner extends Component {
     constructor(props) {
         super(props) ;
         const {
@@ -18,13 +18,56 @@ export default class DetailContaniner extends Component {
             loading : true,
             error : null, 
             isMovie : pathname.includes('/movie/'),
-            slideLoadData : null,
-            slideId : null
+            slideLoadData : [],
         } ;
     }
 
+    getDataNotAsyncMovie =  id => {
+        
+        MoviesApi.movieDetail(id).then((e) => {
+            const { data } = e ;
+
+            MoviesApi.getRent(id).then((e) => {
+                const {
+                    data : { 
+                        results 
+                    } 
+                } = e ;
+                const { slideLoadData } = this.state ;
+
+                this.setState({
+                    slideLoadData : [ ...slideLoadData, { result : data, resultRent : results } ],
+                }) ;
+            })
+        }) ;
+
+        return ;
+    }
+
+    getDataNotAsyncTV =  (id) => {
+        
+        TVApi.showDetail(id).then((e) => {
+            const { data } = e ;
+
+            TVApi.getRent(id).then((e) => {
+                const {
+                    data : { 
+                        results 
+                    } 
+                } = e ;
+                const { slideLoadData } = this.state ;
+
+                this.setState({
+                    slideLoadData : [ ...slideLoadData, { result : data, resultRent : results } ],
+                }) ;
+            })
+        }) ;
+
+        return ;
+    }
+
     getDataAxios = async () => {
-        const { isMovie } = this.state ;
+        const { isMovie, slideLoadData } = this.state ;
         const { idList } = this ;
         const { 
             match : {
@@ -38,55 +81,64 @@ export default class DetailContaniner extends Component {
         if(isNaN(parseId))
             return push("/") ;
         
-        let arr = [];
         try {
             if(isMovie) {
+
+                const {
+                    data 
+                } = await MoviesApi.movieDetail(parseId) ;
+                
+                const { 
+                    data : { 
+                        results
+                    } 
+                } = await MoviesApi.getRent(parseId) ;
+        
+                const dataObj = {
+                    result : data,
+                    resultRent : results
+                }
+        
+                this.setState({
+                    slideLoadData : [ ...slideLoadData, dataObj ],
+                }) ;
+
+                const indexId = idList.findIndex(idData => idData === Number(parseId))
+                idList.splice(indexId, 1) ;
                 
                 for(let i = 0 ; i < idList.length ; i++) {
-                    const {
-                        data
-                    } = await MoviesApi.movieDetail(idList[i]) ;
-                    
-                    const { 
-                        data : { 
-                            results
-                        } 
-                    } = await MoviesApi.getRent(idList[i]) ;
-            
-                    const dataObj = {
-                        result : data,
-                        resultRent : results
-                    }
-            
-                    arr.push(dataObj) ;
+                    this.getDataNotAsyncMovie(idList[i], id) ;
                 }
+                
 
             }else {
 
+                const {
+                    data
+                } = await TVApi.showDetail(parseId) ;
+                
+                const { 
+                    data : { 
+                        results 
+                    } 
+                } = await TVApi.getRent(parseId) ;
+
+                const dataObj = {
+                    result : data,
+                    resultRent : results
+                }
+        
+                this.setState({
+                    slideLoadData : [ ...slideLoadData, dataObj ],
+                }) ;
+
+                const indexId = idList.findIndex(idData => idData === Number(parseId))
+                idList.splice(indexId, 1) ;
+
                 for(let i = 0 ; i < idList.length ; i++) {
-                    const {
-                        data
-                    } = await TVApi.showDetail(idList[i]) ;
-                    
-                    const { 
-                        data : { 
-                            results
-                        } 
-                    } = await TVApi.getRent(idList[i]) ;
-            
-                    const dataObj = {
-                        result : data,
-                        resultRent : results
-                    }
-            
-                    arr.push(dataObj) ;
+                     this.getDataNotAsyncTV(idList[i]) ;
                 }
             }
-
-            this.setState({
-                slideLoadData : arr,
-                slideId : id
-            })
 
         }catch {
             this.setState({
@@ -102,7 +154,7 @@ export default class DetailContaniner extends Component {
     componentWillUnmount() {
         this.setState({
             slideLoadData : []
-        })
+        }) ;
     }
 
     componentDidMount() {
@@ -110,16 +162,15 @@ export default class DetailContaniner extends Component {
     }
 
     render() {
-        const { loading, error, slideLoadData, slideId } = this.state ;
+        const { loading, error } = this.state ;
         const { idList } = this ;
 
         return (
             <DetailPresenter 
-                slideLoadData = { slideLoadData }
-                slideId = { idList.findIndex(idData => idData === Number(slideId)) }
+                slideLoadData = { this.state.slideLoadData }
                 loading = { loading }
                 error = { error }
             />
         ) ;
     } ;
-}
+})

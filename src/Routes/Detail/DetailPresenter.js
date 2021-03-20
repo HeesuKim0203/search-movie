@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components' ;
 import Helmet from 'react-helmet' ;
@@ -161,7 +161,7 @@ const OverView = styled.p`
     z-index : 1 ;
 
     @media ${props => props.theme.mobileS} {
-        font-size : 11px ;
+        font-size : 12px ;
     }
 `;
 
@@ -246,7 +246,6 @@ const LogoImage = styled.div`
 `;
 
 const DetailPresenter = ({ 
-    slideId,
     slideLoadData,
     loading, 
     error
@@ -320,19 +319,19 @@ const DetailPresenter = ({
         {loading ? <Loader/> : (
             <Swiper
                 spaceBetween = { 30 }
-                initialSlide = { slideId }
+                onSlideChangeTransitionStart = { () => { if(mode468px) setCss(false) } }
             >
                 { slideLoadData && slideLoadData.map(( data, index ) =>  {
 
                     const { result, resultRent } = data ;
                     let canSee = null ;
 
-                    if (resultRent && resultRent.KR && resultRent.KR.flatrate && resultRent.KR.buy) {
-                        canSee = [...resultRent.KR.flatrate, ...resultRent.KR.buy] ;
-                    }else if(resultRent && resultRent.KR && resultRent.KR.buy) {
-                        canSee = [...resultRent.KR.buy] ;
-                    }else if (resultRent && resultRent.KR && resultRent.KR.flatrate) {
-                        canSee = [...resultRent.KR.flatrate] ;
+                    if (resultRent && resultRent.JP && resultRent.JP.flatrate && resultRent.JP.buy) {
+                        canSee = [...resultRent.JP.flatrate, ...resultRent.JP.buy] ;
+                    }else if(resultRent && resultRent.JP && resultRent.JP.buy) {
+                        canSee = [...resultRent.JP.buy] ;
+                    }else if (resultRent && resultRent.JP && resultRent.JP.flatrate) {
+                        canSee = [...resultRent.JP.flatrate] ;
                     }
                     
                     return (
@@ -392,7 +391,7 @@ const DetailPresenter = ({
                                     </Cover>
                                     { mode468px ? null : <VideoContainer>
                                             <Video 
-                                                src={ result.videos.results &&  result.videos.results.length > 0 &&`https://www.youtube.com/embed/${result.videos.results[0].key}`} 
+                                                src = { result.videos.results &&  result.videos.results.length > 0 && `https://www.youtube.com/embed/${result.videos.results[0].key}`} 
                                                 frameborder = "0"
                                                 allowfullscreen
                                             />
@@ -420,4 +419,4 @@ DetailPresenter.propTypes = {
     error : PropTypes.string,
 };
 
-export default DetailPresenter;
+export default DetailPresenter ;

@@ -16,7 +16,10 @@ const Container = styled.div`
 const FixedMenu = () => {
 
     function onClickScrollTop(e) {
-        window.scrollTo(0, 0) ;
+        window.scroll({
+            behavior : 'smooth',
+            top : 0
+        }) ;
     }
 
     return (
