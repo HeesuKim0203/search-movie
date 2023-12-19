@@ -6,14 +6,12 @@ export const size = {
     mobileS : 468  
 }
 
-type Theme<T> = {
-    [key in keyof T] : string
-}
-
-const theme = {} as Theme<typeof size> ;
-
-for( const key in size ) {
-    theme[key] = `(max-width : ${size[key]}px)` ;
-}
+const theme = {
+    laptop : `(max-width : ${size.laptop}px)`,
+    tabletL : `(max-width : ${size.tabletL}px)`,
+    tabletS : `(max-width : ${size.tabletS}px)`,
+    mobileL : `(max-width : ${size.mobileL}px)`,
+    mobileS : `(max-width : ${size.mobileS}px)`,
+} ;
 
 export default theme ;
