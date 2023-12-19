@@ -1,6 +1,6 @@
 import React from 'react' ;
 import styled from 'styled-components' ;
-import { Link, withRouter } from 'react-router-dom' ;
+import { Link, useLocation } from 'react-router-dom' ;
 
 const Header = styled.header`
     color : white ;
@@ -44,18 +44,22 @@ const Rlink = styled(Link)`
     justify-content : center ;
 `;
 
-export default  withRouter(({ location : { pathname } }) => (
-    <Header>
-        <List>
-            <Item current={ pathname === "/" }>
-                <Rlink to="/">Movie</Rlink>
-            </Item>
-            <Item current={ pathname === "/tv"  }>
-                <Rlink to="/tv">TV</Rlink>
-            </Item>
-            <Item current={ pathname === "/search" }>
-                <Rlink to="/search">Search</Rlink>
-            </Item>
-        </List>
-    </Header>
-));
+export default () => {
+    
+    const { pathname } = useLocation() ;
+    return (
+        <Header>
+            <List>
+                <Item current={ pathname === "/" }>
+                    <Rlink to="/">Movie</Rlink>
+                </Item>
+                <Item current={ pathname === "/tv"  }>
+                    <Rlink to="/tv">TV</Rlink>
+                </Item>
+                <Item current={ pathname === "/search" }>
+                    <Rlink to="/search">Search</Rlink>
+                </Item>
+            </List>
+        </Header>
+    )
+};

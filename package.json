@@ -1,7 +1,8 @@
 {
-  "name": "reactex",
+  "name": "search-movie",
+  "homepage": "https://heesukim0203.github.io/search-movie",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.34",
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
@@ -9,18 +10,20 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
-    "axios": "^0.21.1",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "axios": "^1.6.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.1",
+    "react-router": "^6.21.0",
+    "react-router-dom": "^6.21.0",
+    "react-scripts": "^5.0.1",
     "styled-components": "^5.1.1",
     "styled-reset": "^4.2.0",
-    "swiper": "^6.5.0",
-    "webpack-bundle-analyzer": "^4.4.0"
+    "swiper": "^6.5.0"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -40,5 +43,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^6.1.0"
   }
 }

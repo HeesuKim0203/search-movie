@@ -4,7 +4,7 @@ const api = axios.create({
     baseURL : 'https://api.themoviedb.org/3/',
 }) ;
 
-const KEY = '4588cb8b75a10863fd9c6530730a127b' ;
+const KEY = process.env.REACT_APP_API_PUBLIC_KEY ;
 
 export const MoviesApi = {
     nowPlaying : () => api.get(`movie/now_playing?api_key=${KEY}&language=ja-JP`),
