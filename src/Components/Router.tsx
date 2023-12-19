@@ -5,7 +5,7 @@ import Home from '../Routes/Home' ;
 import Search from '../Routes/Search' ;
 import Tv from '../Routes/Tv' ;
 import Detail from '../Routes/Detail'
-import FixedMenu from '../Components/FixedMenu' ;
+import FixedMenu from './FixedMenu' ;
 
 import Header from './Header' ;
 
