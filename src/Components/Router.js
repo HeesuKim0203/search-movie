@@ -10,7 +10,7 @@ import FixedMenu from '../Components/FixedMenu' ;
 import Header from './Header' ;
 
 export default () => (
-    <BrowserRouter>
+    <BrowserRouter basename = { process.env.PUBLIC_URL } >
         <Header />
         <Routes>
             <Route path="/" element = { <Home /> } />
