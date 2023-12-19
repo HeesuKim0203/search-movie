@@ -13,12 +13,11 @@ export default () => (
     <BrowserRouter>
         <Header />
         <Routes>
-            <Route path="/" exact component={Home} />
-            <Route path="/tv" component={Tv} />
-            <Route path="/search" component={Search} />
-            <Route path="/movie/:id" component={Detail} />
-            <Route path="/show/:id" component={Detail} />
-            {/* <Redirect from="*" to="/" /> */}
+            <Route path="/" element = { <Home /> } />
+            <Route path="/tv" element = { <Tv /> } />
+            <Route path="/search" element = { <Search /> } />
+            <Route path="/movie/:id" element = { <Detail /> } />
+            <Route path="/show/:id" element = { <Detail /> } />
         </Routes>
         <FixedMenu />
     </BrowserRouter>

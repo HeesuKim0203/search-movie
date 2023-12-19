@@ -44,22 +44,22 @@ const Rlink = styled(Link)`
     justify-content : center ;
 `;
 
-export default (() => {
+export default () => {
     
     const { pathname } = useLocation() ;
-    
     return (
-    <Header>
-        <List>
-            <Item current={ pathname === "/" }>
-                <Rlink to="/">Movie</Rlink>
-            </Item>
-            <Item current={ pathname === "/tv"  }>
-                <Rlink to="/tv">TV</Rlink>
-            </Item>
-            <Item current={ pathname === "/search" }>
-                <Rlink to="/search">Search</Rlink>
-            </Item>
-        </List>
-    </Header>
-)});
+        <Header>
+            <List>
+                <Item current={ pathname === "/" }>
+                    <Rlink to="/">Movie</Rlink>
+                </Item>
+                <Item current={ pathname === "/tv"  }>
+                    <Rlink to="/tv">TV</Rlink>
+                </Item>
+                <Item current={ pathname === "/search" }>
+                    <Rlink to="/search">Search</Rlink>
+                </Item>
+            </List>
+        </Header>
+    )
+};
