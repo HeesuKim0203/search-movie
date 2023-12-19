@@ -22,6 +22,7 @@ export default class extends Component {
             const {
                 data : { results : nowPlaying }
             } = await MoviesApi.nowPlaying() ;
+            console.log(nowPlaying)
             const {
                 data : { results : upcoming }
             } = await MoviesApi.upcoming() ;

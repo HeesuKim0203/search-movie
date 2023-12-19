@@ -1,14 +1,15 @@
-import React from 'react' ;
+import { createRoot } from 'react-dom/client';
 import ReactDOM from 'react-dom' ;
 import App from './Components/App' ;
 import { ThemeProvider } from 'styled-components' ;
 
 import theme from './theme' ;
 
-ReactDOM.render(
+const container = document.getElementById('root');
+const root = createRoot(container); // createRoot(container!) if you use TypeScript
+root.render(
     <ThemeProvider theme={theme}>
-        <App/>
+        <App tab="home" />
     </ThemeProvider>
-    , 
-document.getElementById('root')) ;
+);
 

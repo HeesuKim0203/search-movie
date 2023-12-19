@@ -1,6 +1,6 @@
 import React from 'react' ;
 import styled from 'styled-components' ;
-import { Link, withRouter } from 'react-router-dom' ;
+import { Link, useLocation } from 'react-router-dom' ;
 
 const Header = styled.header`
     color : white ;
@@ -44,7 +44,11 @@ const Rlink = styled(Link)`
     justify-content : center ;
 `;
 
-export default  withRouter(({ location : { pathname } }) => (
+export default (() => {
+    
+    const { pathname } = useLocation() ;
+    
+    return (
     <Header>
         <List>
             <Item current={ pathname === "/" }>
@@ -58,4 +62,4 @@ export default  withRouter(({ location : { pathname } }) => (
             </Item>
         </List>
     </Header>
-));
+)});
