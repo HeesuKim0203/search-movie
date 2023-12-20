@@ -22,6 +22,9 @@ type State = {
 export default memo(() => {
 
     const locationData = useLocation() ;
+
+    console.log(locationData) ;
+
     const location = {
         pathname : locationData.pathname,
         state : locationData.state

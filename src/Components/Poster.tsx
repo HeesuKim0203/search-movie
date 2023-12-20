@@ -64,15 +64,17 @@ type PosterProps = {
     rating : number
     year : string
     isMovie? : boolean
-    idList : number[]
+    idList : any
 }
 
 const Poster = ({ id, imageUrl, title, rating, year, isMovie = false, idList } : PosterProps) => {
 
     const linkTo = {
         pathname : isMovie ? `/movie/${id}` : `/show/${id}`,
-        state : idList
+        state : { idList }
     } ;
+
+    console.log(linkTo)
 
     return (
         <Link to = { linkTo } >
