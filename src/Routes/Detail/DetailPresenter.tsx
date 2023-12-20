@@ -16,9 +16,9 @@ SwiperCore.use([]) ;
  
 const Container = styled.div`
     height : calc(100vh - 50px) ;
-    width : 100% ;
-    position : relative ;
+    width : 100vw ;
     padding : 50px ;
+    position : relative ;
 
     margin : 0 auto ;
 
@@ -30,13 +30,9 @@ const Container = styled.div`
 `;
 
 const VideoContainer = styled.div`
-    position : absolute ;
-    width : 50% ;
+    width : 100% ;
     height : 50% ;
     padding : 0 5px ;
-    z-index : 0 ;
-    bottom : 0 ;
-    right : 120px ;
 
     @media ${props => props.theme.mobileS} {
         position : static ;
@@ -68,26 +64,37 @@ const Backdrop = styled.div<{ bgImage : string }>`
     opacity : 0.5 ;
 `;
 
-const Data = styled.div<{ backgroundColor : string, display : string }>`
-    width : 50% ;
-    margin-left : 10px ;
-    position : absolute ;
-    left : 600px ;
-    top : 0 ;
-    z-index : 2 ;
+const DataContainer = styled.div<{ display : string, backgroundColor : string }>`
+    display : ${props => props.display} ;
+    flex : 1 ;
+    padding : 0 50px 0 50px ;
+
     background-color : ${props => props.backgroundColor} ; 
 
-    display : ${props => props.display} ;
+    flex-direction : column ;
 
     @media ${props => props.theme.mobileS} {
-        position : static ;
+        flex : 0 ;
+        padding : 10px ;
 
-        width : 100% ;
-        height : 100% ;
+        position : absolute ;
 
         float : left ;
 
-        padding : 10px ;
+        width : 340px ;
+        height : 500px ;
+    }
+`;
+
+const Data = styled.div`
+    width : 100% ;
+    flex : 1 ;
+    margin-left : 10px ;
+    z-index : 2 ;
+
+    display : block ;
+
+    @media ${props => props.theme.mobileS} {
         margin-left : 0 ;
     }
 `;
@@ -110,8 +117,9 @@ const Content = styled.div`
     display : flex ;
     width : 80% ;
     height : 100% ;
-    position : relative ;  
     z-index : 1 ;
+
+    justify-content : center ;
 
     margin : 0 auto ;
 
@@ -124,14 +132,22 @@ const Content = styled.div`
 `;
 
 const Title = styled.h3`
-    font-size : 32px ;
+    width : 100% ;
+    height : 52px ;
+    font-size : 48px ;
     margin-bottom : 20px ;
     position : relative ;
     z-index : 1 ;
 
+    overflow : hidden ;
+    text-overflow : ellipsis ;
+    white-space : nowrap ;
+
     @media ${props => props.theme.mobileS} {
         font-size : 18px ;
         margin-bottom : 10px ;
+
+        height : 32px ;
     }
 `;
 
@@ -153,15 +169,27 @@ const Divider = styled.span`
     margin : 0 10px ;
 `;
 
-const OverView = styled.p`
-    position : relative ;
-    font-size : 12px ;
-    line-height : 1.5 ;
+const OverView = styled.p`  
+    display : -webkit-box ;
+    display : -ms-flexbox ;
+    display : box ;
+    font-size : 16px ;
+    line-height : 150% ;
     margin-bottom : 10px ;
-    z-index : 1 ;
+    width : 100% ;
+    height : 35% ;
+
+    overflow : hidden ;
+    vertical-align : top ;
+    text-overflow : ellipsis ;
+    word-break : break-all ;
+    -webkit-box-orient : vertical ;
+    -webkit-line-clamp : 6 ;
 
     @media ${props => props.theme.mobileS} {
         font-size : 12px ;
+        height : auto ;
+        -webkit-line-clamp : unset ;
     }
 `;
 
@@ -247,8 +275,8 @@ const LogoImage = styled.div<{ bgImage : string }>`
 
 type DetailPresenterProps = {
     slideLoadData : any
-    loading : any
-    error : any
+    loading : boolean
+    error : string
 }
 
 const DetailPresenter = ({ 
@@ -288,6 +316,7 @@ const DetailPresenter = ({
     }
 
     const viewContentNumCheck = ( innerWidth : number ) => {
+
         if( innerWidth <= mobileS ) {
             setMode468px(true) ;
             setCss(false) ;
@@ -354,56 +383,60 @@ const DetailPresenter = ({
                                             : require("../../assets/noPoster.jpg")}
                                         onTouchMove={ touchMoveInit }
                                         onTouchEnd={ (e) => mode468px ? clickCover(e) : null }
-                                    >
-                                    <Data 
-                                        display={ css ? 'block' : 'none' }
+                                    />
+                                    <DataContainer 
+                                        display={ css ? 'flex' : 'none' }
                                         backgroundColor={ mode468px ? 'rgba(0, 0, 0, 0.8)' : 'none' }
-                                        onTouchMove={ touchMoveInitData }
-                                        onTouchEnd={ (e) => mode468px ? clickData(e) : null }
                                     >
-                                        <Title>{result.original_title ? result.original_title : result.original_name}</Title>
-                                        <ItemContainer>
-                                            <Item>
-                                                {result.release_date ? 
-                                                result.release_date.substring(0, 7)
-                                                : result.first_air_date.substring(0, 7)}
-                                            </Item>
-                                            <Divider>.</Divider>
-                                            <Item>
-                                                {result.runtime ? 
-                                                result.runtime 
-                                                : result.episode_run_time}min
-                                            </Item>
-                                            <Divider>.</Divider>
-                                            <Item>
-                                                { 
-                                                    result.genres!.map((genre : any, index : number) => 
-                                                        index === result.genres.length - 1 ? 
-                                                        genre.name 
-                                                        : `${genre.name} / `
-                                                    )
-                                                }
-                                            </Item>
-                                        </ItemContainer>
-                                        <OverView>{result.overview}</OverView>
-                                        <RentUl>
-                                            {canSee && canSee.map((data, index) =>
-                                                <RentLi key={index}>
-                                                    <RentTitle>{data.provider_name}</RentTitle>
-                                                    <LogoImageWrapper>
-                                                        <LogoImage bgImage={`https://image.tmdb.org/t/p/original${data.logo_path}`}/>
-                                                    </LogoImageWrapper>
-                                                </RentLi>)}
-                                        </RentUl>
-                                    </Data>
-                                    </Cover>
-                                    { mode468px ? null : <VideoContainer>
-                                            <Video 
-                                                src = { result.videos.results!.length > 0 ? `https://www.youtube.com/embed/${result.videos.results[0].key}` : '' } 
-                                                frameborder = "0"
-                                                allowfullscreen
-                                            />
-                                    </VideoContainer>}
+                                        <Data 
+                                            //display={ css ? 'block' : 'none' }
+                                            //backgroundColor={ mode468px ? 'rgba(0, 0, 0, 0.8)' : 'none' }
+                                            onTouchMove={ touchMoveInitData }
+                                            onTouchEnd={ (e) => mode468px ? clickData(e) : null }
+                                        >
+                                            <Title>{result.original_title ? result.original_title : result.original_name}</Title>
+                                            <ItemContainer>
+                                                <Item>
+                                                    {result.release_date ? 
+                                                    result.release_date.substring(0, 7)
+                                                    : result.first_air_date.substring(0, 7)}
+                                                </Item>
+                                                <Divider>.</Divider>
+                                                <Item>
+                                                    {result.runtime ? 
+                                                    result.runtime 
+                                                    : result.episode_run_time}min
+                                                </Item>
+                                                <Divider>.</Divider>
+                                                <Item>
+                                                    { 
+                                                        result.genres!.map((genre : any, index : number) => 
+                                                            index === result.genres.length - 1 ? 
+                                                            genre.name 
+                                                            : `${genre.name} / `
+                                                        )
+                                                    }
+                                                </Item>
+                                            </ItemContainer>
+                                            <OverView>{result.overview}</OverView>
+                                            <RentUl>
+                                                {canSee && canSee.map((data, index) =>
+                                                    <RentLi key={index}>
+                                                        <RentTitle>{data.provider_name}</RentTitle>
+                                                        <LogoImageWrapper>
+                                                            <LogoImage bgImage={`https://image.tmdb.org/t/p/original${data.logo_path}`}/>
+                                                        </LogoImageWrapper>
+                                                    </RentLi>)}
+                                            </RentUl>
+                                        </Data>
+                                        { mode468px ? null : <VideoContainer>
+                                                <Video 
+                                                    src = { result.videos.results!.length > 0 ? `https://www.youtube.com/embed/${result.videos.results[0].key}` : '' } 
+                                                    frameborder = "0"
+                                                    allowfullscreen
+                                                />
+                                        </VideoContainer>}
+                                    </DataContainer>
                                 </Content>
                                 { mode468px ? (
                                     <VideoContainer>
@@ -412,15 +445,7 @@ const DetailPresenter = ({
                                             frameborder = "0"
                                             allowfullscreen
                                         />
-                                    </VideoContainer>) : (
-                                    <VideoContainer>
-                                        <Video 
-                                            src = { result.videos.results!.length > 0 ? `https://www.youtube.com/embed/${result.videos.results[0].key}` : '' } 
-                                            frameborder = "0"
-                                            allowfullscreen
-                                        />
-                                    </VideoContainer>
-                                )}
+                                    </VideoContainer>) : null}
                                 { error && <Error text={error} color="red"/> }
                             </Container>
                         </SwiperSlide>

@@ -64,27 +64,21 @@ type PosterProps = {
     rating : number
     year : string
     isMovie? : boolean
-    idList : any
+    idList : number[]
 }
 
 const Poster = ({ id, imageUrl, title, rating, year, isMovie = false, idList } : PosterProps) => {
-
-    const linkTo = {
-        pathname : isMovie ? `/movie/${id}` : `/show/${id}`,
-        state : { idList }
-    } ;
-
-    console.log(linkTo)
-
     return (
-        <Link to = { linkTo } >
+        <Link to = {{
+            pathname : isMovie ? `/movie/${id}` : `/show/${id}`
+        }} state = { idList } >
             <Container>
                 <ImageContainer>
                     <Image bgUrl={imageUrl ? 
                         `https://image.tmdb.org/t/p/w300${imageUrl}` : require("../assets/noPoster.jpg")}/>
                     <Rating>
                         <FontAwesomeIcon icon={faStar} color="#ffee58" />
-                        &nbsp; {rating} / 10
+                        &nbsp; { `${rating.toFixed(1)} / 10` }
                     </Rating>
                 </ImageContainer>
                 <Title>{title.length > 18 ? `${title.substring(0, 18)}...` : title}</Title>

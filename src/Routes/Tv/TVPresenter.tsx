@@ -13,14 +13,14 @@ const Container = styled.div`
 `;
 
 type TVPresenterProps = {
-    topRatedIdList : any[]
-    popularIdList : any[]
-    airingTodayIdList : any[]
-    topRated : any
-    popular : any
-    airingToday : any
-    loading : any
-    error : any
+    topRatedIdList : number[]
+    popularIdList : number[]
+    airingTodayIdList : number[]
+    topRated : any[]
+    popular : any[]
+    airingToday : any[]
+    loading : boolean
+    error : string
 }
 
 const TVPresenter = ({ 

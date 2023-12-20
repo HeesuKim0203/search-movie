@@ -4,11 +4,11 @@ import { TVApi } from '../../api' ;
 
 export default class TVcontainer extends Component {
     state = {
-        topRated : null,
-        popular : null,
-        airingToday : null,
+        topRated : [],
+        popular : [],
+        airingToday : [],
         loading : true,
-        error : null,
+        error : '',
         topRatedIdList : [],
         popularIdList : [],
         airingTodayIdList : []

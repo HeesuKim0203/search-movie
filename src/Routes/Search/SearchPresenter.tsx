@@ -24,14 +24,14 @@ const Input = styled.input`
 `;
 
 type SearchPresenterProps = {
-    movieResultsIdList : any
-    showResultsIdList : any
+    movieResultsIdList : number[]
+    showResultsIdList : number[]
     movieResults : any
     showResults : any
-    loading : any
-    error : any
-    handleSubmit : any
-    updateTerm : any
+    loading : boolean
+    error : string
+    handleSubmit : React.FormEventHandler<HTMLFormElement>
+    updateTerm : React.ChangeEventHandler<HTMLInputElement>
 }
 
 const SearchPresenter = ({ 
@@ -48,7 +48,7 @@ const SearchPresenter = ({
                 <title>Search | Search Media</title>
             </Helmet>
             <Form onSubmit = {handleSubmit}>
-                <Input placeholder="Search Movies or TV Shows..." onChange={updateTerm}/>
+                <Input placeholder="Search Movies or TV Shows..." onChange = {updateTerm}/>
             </Form>
             { loading ? <Loader/> : <>
                 {movieResults && movieResults.length >0 &&

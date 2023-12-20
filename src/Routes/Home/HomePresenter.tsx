@@ -13,14 +13,14 @@ const Container = styled.div`
 `;
 
 type HomePresenterProps = {
-    nowPlaying : any
-    upcoming : any
-    popular : any
-    error : any
-    loading : any
-    nowPlayingIdList : any
-    upcomingIdLlist : any
-    popularIdList : any
+    nowPlaying : any[]
+    upcoming : any[]
+    popular : any[]
+    error : string
+    loading : boolean
+    nowPlayingIdList : number[]
+    upcomingIdLlist : number[]
+    popularIdList : number[]
 }
 
 const HomePresenter = ({ 

@@ -12,11 +12,11 @@ export default class SearchContainer extends Component {
         loading : false,
         error : ''
     } ;
-    updateTerm = (e : any) => {
+    updateTerm = (e : React.ChangeEvent<HTMLInputElement>) => {
         const { value } = e.currentTarget ;
         this.setState({ searchTerm : value }) ;
     }
-    handleSubmit = (e : any) => {
+    handleSubmit = (e : React.FormEvent<HTMLFormElement>) => {
         e.preventDefault() ;
         const { searchTerm } = this.state ;
         if(searchTerm !== '') {

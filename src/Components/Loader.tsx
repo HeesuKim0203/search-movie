@@ -5,11 +5,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
 import { faSpinner } from '@fortawesome/free-solid-svg-icons' ;
 
 const Container = styled.div`
-    height : 100vh ;
-    width : 100vw ;
+    height : 95vh ;
+    width : 95vw ;
     display : flex ;
     justify-content : center ;
-    margin-top : 40px ;
+    padding-top : 50px ;
 `;
 
 export default () => (

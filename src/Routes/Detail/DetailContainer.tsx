@@ -1,36 +1,29 @@
 import React, { Component, memo } from 'react' ;
 import DetailPresenter from './DetailPresenter' ;
-import { MoviesApi, TVApi } from '../../api';
-import { useLocation } from 'react-router';
+import { MoviesApi, TVApi } from '../../api' ;
+import { NavigateFunction, useLocation, useNavigate } from 'react-router' ;
 
 type DetailContaninerProps = {
     location : {
         pathname : string
-        state : {
-            idList : number[]
-        }
+        state : number[]
     }
+    navigate : NavigateFunction
 }
 
 type State = {
     loading : boolean
-    error : string | null
+    error : string
     isMovie : boolean
     slideLoadData : any
 }
 
 export default memo(() => {
 
-    const locationData = useLocation() ;
+    const location = useLocation() ;
+    const navigate = useNavigate() ;
 
-    console.log(locationData) ;
-
-    const location = {
-        pathname : locationData.pathname,
-        state : locationData.state
-    } ;
-
-    return <DetailContaniner location = { location } />
+    return <DetailContaniner location = { location } navigate = { navigate } />
 })
 
 
@@ -44,7 +37,7 @@ class DetailContaniner extends Component<DetailContaninerProps, {}>  {
         const {
             location : { 
                 pathname,  
-                state : { idList }
+                state : idList
             },
         } = props ;
 
@@ -52,7 +45,7 @@ class DetailContaniner extends Component<DetailContaninerProps, {}>  {
 
         this.state = {
             loading : true,
-            error : null, 
+            error : '', 
             isMovie : pathname.includes('/movie/'),
             slideLoadData : [],
         } ;
@@ -106,24 +99,24 @@ class DetailContaniner extends Component<DetailContaninerProps, {}>  {
         const { isMovie, slideLoadData } = this.state ;
         const { idList } = this ;
         const { 
-            match : {
-                params : { id }
+            location : {
+                pathname
             },
-            history : { push }
-        } = this.props as any ;
+            navigate
+        } = this.props ;
 
+        const parseId = parseInt(pathname.split("/")[2]) ;
 
-        const parseId = parseInt(id) ;
-        if(isNaN(parseId))
-            return push("/") ;
+        if(isNaN(parseId)) return navigate("/") ;
         
         try {
+
             if(isMovie) {
 
                 const {
                     data 
                 } = await MoviesApi.movieDetail(parseId) ;
-                
+
                 const { 
                     data : { 
                         results
@@ -134,10 +127,6 @@ class DetailContaniner extends Component<DetailContaninerProps, {}>  {
                     result : data,
                     resultRent : results
                 }
-        
-                this.setState({
-                    slideLoadData : [ ...slideLoadData, dataObj ],
-                }) ;
 
                 const indexId = idList.findIndex((idData : number) => idData === Number(parseId))
                 idList.splice(indexId, 1) ;
@@ -145,7 +134,10 @@ class DetailContaniner extends Component<DetailContaninerProps, {}>  {
                 for(let i = 0 ; i < idList.length ; i++) {
                     this.getDataNotAsyncMovie(idList[i]) ;
                 }
-                
+
+                this.setState({
+                    slideLoadData : [ ...slideLoadData, dataObj ],
+                }) ;
 
             }else {
 
@@ -163,20 +155,20 @@ class DetailContaniner extends Component<DetailContaninerProps, {}>  {
                     result : data,
                     resultRent : results
                 }
-        
-                this.setState({
-                    slideLoadData : [ ...slideLoadData, dataObj ],
-                }) ;
 
                 const indexId = idList.findIndex(idData => idData === Number(parseId))
                 idList.splice(indexId, 1) ;
 
                 for(let i = 0 ; i < idList.length ; i++) {
-                     this.getDataNotAsyncTV(idList[i]) ;
+                    this.getDataNotAsyncTV(idList[i]) ;
                 }
+  
+                this.setState({
+                    slideLoadData : [ ...slideLoadData, dataObj ],
+                }) ;
             }
 
-        }catch {
+        }catch(err) {
             this.setState({
                 error : "Can't find anything.",
             }) ;
@@ -199,7 +191,6 @@ class DetailContaniner extends Component<DetailContaninerProps, {}>  {
 
     render() {
         const { loading, error } = this.state ;
-        const { idList } = this ;
 
         return (
             <DetailPresenter 
