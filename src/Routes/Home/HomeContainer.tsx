@@ -4,15 +4,14 @@ import { MoviesApi } from '../../api' ;
 
 export default class extends Component {
     state = {
-        nowPlaying : null,
-        upcoming : null,
-        popular : null,
-        error : null,
+        nowPlaying : [],
+        upcoming : [],
+        popular : [],
+        error : "",
         loading : true,
-        nowPlayingIdList : null,
-        upcomingIdLlist : null,
-        popularIdList : null,
-        
+        nowPlayingIdList : [],
+        upcomingIdLlist : [],
+        popularIdList : [],
     } ;
     async componentDidMount() {
 
@@ -48,8 +47,8 @@ export default class extends Component {
         }
     } ;
 
-    setIdArr = arr => {
-        return arr.map(data => data.id) ;
+    setIdArr = (arr : any) => {
+        return arr.map((data : any) => data.id) ;
     }
 
     render() {
@@ -66,14 +65,14 @@ export default class extends Component {
 
         return (
             <HomePresenter
-                nowPlayingIdList = { nowPlayingIdList }
-                upcomingIdLlist = { upcomingIdLlist }
-                popularIdList = { popularIdList }
                 nowPlaying = { nowPlaying }
                 upcoming = { upcoming }
                 popular = { popular }
                 error = { error }
                 loading = { loading }
+                nowPlayingIdList = { nowPlayingIdList }
+                upcomingIdLlist = { upcomingIdLlist }
+                popularIdList = { popularIdList }
             />
         ) ;
     } ;

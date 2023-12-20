@@ -25,11 +25,11 @@ const List = styled.ul`
     display : flex ;
 ` ;
 
-const Item = styled.li`
+const Item = styled.li<{current : boolean}>`
     width : 80px ;
     height : 50px ;
     border-bottom : 4px solid 
-        ${ props => props.current ? "#00695c" : "transparent" } ;
+        ${props => props.current ? "#00695c" : "transparent"} ;
     transition : border-bottom 0.4s ease-in-out ;
 
     @media ${props => props.theme.mobileS} {
@@ -50,14 +50,14 @@ export default () => {
     return (
         <Header>
             <List>
-                <Item current={ pathname === "/" }>
-                    <Rlink to="/">Movie</Rlink>
+                <Item current = { pathname === "/" }>
+                    <Rlink to = "/">Movie</Rlink>
                 </Item>
-                <Item current={ pathname === "/tv"  }>
-                    <Rlink to="/tv">TV</Rlink>
+                <Item current = { pathname === "/tv"  }>
+                    <Rlink to = "/tv">TV</Rlink>
                 </Item>
-                <Item current={ pathname === "/search" }>
-                    <Rlink to="/search">Search</Rlink>
+                <Item current = { pathname === "/search" }>
+                    <Rlink to = "/search">Search</Rlink>
                 </Item>
             </List>
         </Header>

@@ -1,9 +1,42 @@
 import React, { Component, memo } from 'react' ;
 import DetailPresenter from './DetailPresenter' ;
 import { MoviesApi, TVApi } from '../../api';
+import { useLocation } from 'react-router';
 
-export default memo(class DetailContaniner extends Component {
-    constructor(props) {
+type DetailContaninerProps = {
+    location : {
+        pathname : string
+        state : {
+            idList : number[]
+        }
+    }
+}
+
+type State = {
+    loading : boolean
+    error : string | null
+    isMovie : boolean
+    slideLoadData : any
+}
+
+export default memo(() => {
+
+    const locationData = useLocation() ;
+    const location = {
+        pathname : locationData.pathname,
+        state : locationData.state
+    } ;
+
+    return <DetailContaniner location = { location } />
+})
+
+
+class DetailContaniner extends Component<DetailContaninerProps, {}>  {
+
+    idList : number[] ;
+    state : State ;
+
+    constructor(props : DetailContaninerProps) {
         super(props) ;
         const {
             location : { 
@@ -22,7 +55,7 @@ export default memo(class DetailContaniner extends Component {
         } ;
     }
 
-    getDataNotAsyncMovie =  id => {
+    getDataNotAsyncMovie = (id : number) => {
         
         MoviesApi.movieDetail(id).then((e) => {
             const { data } = e ;
@@ -44,7 +77,7 @@ export default memo(class DetailContaniner extends Component {
         return ;
     }
 
-    getDataNotAsyncTV =  (id) => {
+    getDataNotAsyncTV =  (id : number) => {
         
         TVApi.showDetail(id).then((e) => {
             const { data } = e ;
@@ -74,7 +107,7 @@ export default memo(class DetailContaniner extends Component {
                 params : { id }
             },
             history : { push }
-        } = this.props ;
+        } = this.props as any ;
 
 
         const parseId = parseInt(id) ;
@@ -103,11 +136,11 @@ export default memo(class DetailContaniner extends Component {
                     slideLoadData : [ ...slideLoadData, dataObj ],
                 }) ;
 
-                const indexId = idList.findIndex(idData => idData === Number(parseId))
+                const indexId = idList.findIndex((idData : number) => idData === Number(parseId))
                 idList.splice(indexId, 1) ;
                 
                 for(let i = 0 ; i < idList.length ; i++) {
-                    this.getDataNotAsyncMovie(idList[i], id) ;
+                    this.getDataNotAsyncMovie(idList[i]) ;
                 }
                 
 
@@ -173,4 +206,4 @@ export default memo(class DetailContaniner extends Component {
             />
         ) ;
     } ;
-})
+}

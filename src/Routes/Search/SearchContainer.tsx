@@ -4,19 +4,19 @@ import { MoviesApi, TVApi } from '../../api' ;
 
 export default class SearchContainer extends Component {
     state = {
-        movieResultsIdList : null,
-        showResultsIdList : null,
-        movieResults : null,
-        showResults : null,
+        movieResultsIdList : [],
+        showResultsIdList : [],
+        movieResults : [],
+        showResults : [],
         searchTerm : '',
         loading : false,
-        error : null
+        error : ''
     } ;
-    updateTerm = (e) => {
+    updateTerm = (e : any) => {
         const { value } = e.currentTarget ;
         this.setState({ searchTerm : value }) ;
     }
-    handleSubmit = (e) => {
+    handleSubmit = (e : any) => {
         e.preventDefault() ;
         const { searchTerm } = this.state ;
         if(searchTerm !== '') {
@@ -52,8 +52,8 @@ export default class SearchContainer extends Component {
         }
     }
 
-    setIdArr = arr => {
-        return arr.map(data => data.id) ;
+    setIdArr = (arr : any) => {
+        return arr.map((data : any) => data.id) ;
     }
 
    render() { 

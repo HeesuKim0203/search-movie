@@ -8,7 +8,7 @@ import { faStar } from '@fortawesome/free-solid-svg-icons' ;
 
 const Container = styled.div``;
 
-const Image = styled.div`
+const Image = styled.div<{ bgUrl : string }>`
     background-image : url(${props => props.bgUrl}) ;
     height : 180px ;
     background-size : cover ;
@@ -57,25 +57,40 @@ const Year = styled.span`
     }
 `;
 
-const Poster = ({ id, imageUrl, title, rating, year, isMovie = false, idList }) =>
-    <Link to={{
+type PosterProps = {
+    id : string
+    imageUrl : string
+    title : string
+    rating : number
+    year : string
+    isMovie? : boolean
+    idList : number[]
+}
+
+const Poster = ({ id, imageUrl, title, rating, year, isMovie = false, idList } : PosterProps) => {
+
+    const linkTo = {
         pathname : isMovie ? `/movie/${id}` : `/show/${id}`,
-        state : { idList }
-        }} >
-        <Container>
-            <ImageContainer>
-                <Image bgUrl={imageUrl ? 
-                    `https://image.tmdb.org/t/p/w300${imageUrl}` : require("../assets/noPoster.jpg")}/>
-                <Rating>
-                    <FontAwesomeIcon icon={faStar} color="#ffee58" />
-                    &nbsp; {rating} / 10
-                </Rating>
-            </ImageContainer>
-            <Title>{title.length > 18 ? `${title.substring(0, 18)}...` : title}</Title>
-            <Year>{year}</Year>
-        </Container>
-    </Link>
- ;
+        state : idList
+    } ;
+
+    return (
+        <Link to = { linkTo } >
+            <Container>
+                <ImageContainer>
+                    <Image bgUrl={imageUrl ? 
+                        `https://image.tmdb.org/t/p/w300${imageUrl}` : require("../assets/noPoster.jpg")}/>
+                    <Rating>
+                        <FontAwesomeIcon icon={faStar} color="#ffee58" />
+                        &nbsp; {rating} / 10
+                    </Rating>
+                </ImageContainer>
+                <Title>{title.length > 18 ? `${title.substring(0, 18)}...` : title}</Title>
+                <Year>{year}</Year>
+            </Container>
+        </Link>
+    ) ;
+} ;
 
 Poster.propTypes = {
     imageUrl : PropTypes.string.isRequired,

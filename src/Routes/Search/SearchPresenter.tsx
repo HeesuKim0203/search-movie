@@ -23,6 +23,17 @@ const Input = styled.input`
     width : 100% ;
 `;
 
+type SearchPresenterProps = {
+    movieResultsIdList : any
+    showResultsIdList : any
+    movieResults : any
+    showResults : any
+    loading : any
+    error : any
+    handleSubmit : any
+    updateTerm : any
+}
+
 const SearchPresenter = ({ 
     movieResultsIdList,
     showResultsIdList,
@@ -31,7 +42,7 @@ const SearchPresenter = ({
     loading, 
     error, 
     handleSubmit,
-    updateTerm }) => (
+    updateTerm } : SearchPresenterProps) => (
         <Container>
             <Helmet>
                 <title>Search | Search Media</title>
@@ -42,7 +53,7 @@ const SearchPresenter = ({
             { loading ? <Loader/> : <>
                 {movieResults && movieResults.length >0 &&
                     <Section title="Moive Results">
-                        {movieResults.map(movie => (
+                        {movieResults.map((movie : any) => (
                             <Poster 
                                 key = {movie.id} 
                                 id = {movie.id}
@@ -57,7 +68,7 @@ const SearchPresenter = ({
                     </Section>}
                 {showResults && showResults.length >0 &&
                     <Section title="Show Results">
-                        {showResults.map(show => (
+                        {showResults.map((show : any) => (
                             <Poster 
                                 key = {show.id} 
                                 id = {show.id}  

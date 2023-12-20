@@ -12,6 +12,17 @@ const Container = styled.div`
     padding : 20px ;
 `;
 
+type TVPresenterProps = {
+    topRatedIdList : any[]
+    popularIdList : any[]
+    airingTodayIdList : any[]
+    topRated : any
+    popular : any
+    airingToday : any
+    loading : any
+    error : any
+}
+
 const TVPresenter = ({ 
     topRatedIdList,
     popularIdList,
@@ -20,7 +31,7 @@ const TVPresenter = ({
     popular, 
     airingToday, 
     loading, 
-    error }) =>  (
+    error } : TVPresenterProps) =>  (
     <>
         <Helmet>
             <title>TV | Search Media</title>
@@ -29,7 +40,7 @@ const TVPresenter = ({
             <Container>
                 { topRated && topRated.length > 0 && (
                     <Section title="Top Rated Shows">
-                        {topRated.map(show => (
+                        {topRated.map((show : any) => (
                             <Poster 
                                 key = {show.id} 
                                 id = {show.id}
@@ -44,7 +55,7 @@ const TVPresenter = ({
                 )}
                 { popular && popular.length > 0 && (
                     <Section title="Popular Shows">
-                        {popular.map(show => (
+                        {popular.map((show : any) => (
                             <Poster
                                 key = {show.id} 
                                 id = {show.id}
@@ -59,7 +70,7 @@ const TVPresenter = ({
                 )}
                 { airingToday && airingToday.length > 0 && (
                     <Section title="Airing Today Shows">
-                        {airingToday.map(show => (
+                        {airingToday.map((show : any) => (
                             <Poster
                                 key = {show.id} 
                                 id = {show.id}

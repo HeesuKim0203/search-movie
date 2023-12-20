@@ -12,6 +12,17 @@ const Container = styled.div`
     padding : 20px ;
 `;
 
+type HomePresenterProps = {
+    nowPlaying : any
+    upcoming : any
+    popular : any
+    error : any
+    loading : any
+    nowPlayingIdList : any
+    upcomingIdLlist : any
+    popularIdList : any
+}
+
 const HomePresenter = ({ 
     nowPlaying, 
     upcoming, 
@@ -20,7 +31,7 @@ const HomePresenter = ({
     loading,
     nowPlayingIdList,
     upcomingIdLlist,
-    popularIdList }) => 
+    popularIdList } : HomePresenterProps) => 
     (<>
         <Helmet>
             <title>Movie | Search Media</title>
@@ -29,7 +40,7 @@ const HomePresenter = ({
         <Container>
             { nowPlaying && nowPlaying.length > 0 && ( 
             <Section title="Now Playing Movies">
-                { nowPlaying.map(movie => (
+                { nowPlaying.map((movie : any) => (
                     <Poster 
                         key = {movie.id} 
                         id = {movie.id}
@@ -45,7 +56,7 @@ const HomePresenter = ({
             )}
             { popular && popular.length > 0 && ( 
             <Section title="Popular Movies">
-                { popular.map(movie => (
+                { popular.map((movie : any) => (
                     <Poster 
                         key = {movie.id} 
                         id = {movie.id}
@@ -61,7 +72,7 @@ const HomePresenter = ({
             )}
             { upcoming && upcoming.length > 0 && ( 
             <Section title="Upcoming Movies">
-                { upcoming.map(movie => (
+                { upcoming.map((movie : any) => (
                     <Poster 
                         key = {movie.id} 
                         id = {movie.id}

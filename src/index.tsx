@@ -5,11 +5,11 @@ import { ThemeProvider } from 'styled-components' ;
 
 import theme from './theme' ;
 
-const container = document.getElementById('root');
+const container = document.getElementById('root') as HTMLElement;
 const root = createRoot(container);
 root.render(
     <ThemeProvider theme={theme}>
-        <App tab="home" />
+        <App />
     </ThemeProvider>
 );
 

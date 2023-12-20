@@ -9,9 +9,9 @@ export default class TVcontainer extends Component {
         airingToday : null,
         loading : true,
         error : null,
-        topRatedIdList : null,
-        popularIdList : null,
-        airingTodayIdList : null
+        topRatedIdList : [],
+        popularIdList : [],
+        airingTodayIdList : []
     }
     async componentDidMount() {
 
@@ -46,8 +46,8 @@ export default class TVcontainer extends Component {
         }
     }
 
-    setIdArr = arr => {
-        return arr.map(data => data.id) ;
+    setIdArr = (arr : any) => {
+        return arr.map((data : any) => data.id) ;
     }
 
    render() { 

@@ -54,7 +54,7 @@ const VideoContainer = styled.div`
     }
 `;
 
-const Backdrop = styled.div`
+const Backdrop = styled.div<{ bgImage : string }>`
     position : absolute ;
     top : 0 ;
     left : 0 ;
@@ -68,7 +68,7 @@ const Backdrop = styled.div`
     opacity : 0.5 ;
 `;
 
-const Data = styled.div`
+const Data = styled.div<{ backgroundColor : string, display : string }>`
     width : 50% ;
     margin-left : 10px ;
     position : absolute ;
@@ -92,7 +92,7 @@ const Data = styled.div`
     }
 `;
 
-const Cover = styled.div`
+const Cover = styled.div<{ bgImage : string }>`
     width : 40% ;
     height : 100% ;
     background-image : url(${props => props.bgImage}) ;
@@ -165,7 +165,7 @@ const OverView = styled.p`
     }
 `;
 
-const Video = styled.iframe`
+const Video = styled.iframe<{ src : string, frameborder : string, allowfullscreen : boolean }>`
     width : 100% ;
     height : 100% ;
 `;
@@ -223,7 +223,7 @@ const LogoImageWrapper = styled.div`
     float : left ;
 `;
 
-const LogoImage = styled.div`
+const LogoImage = styled.div<{ bgImage : string }>`
     margin-top : 20px ;
 
     width : 70px ;
@@ -245,11 +245,17 @@ const LogoImage = styled.div`
     }
 `;
 
+type DetailPresenterProps = {
+    slideLoadData : any
+    loading : any
+    error : any
+}
+
 const DetailPresenter = ({ 
     slideLoadData,
     loading, 
     error
-    }) => {
+    } : DetailPresenterProps) => {
 
     const { mobileS } = size ;
     const [ mode468px, setMode468px ] = useState(false) ;
@@ -257,31 +263,31 @@ const DetailPresenter = ({
     const [ touchMove, setTouchMove ] = useState(false) ;
     const [ touchMoveData, setTouchMoveData ] = useState(false) ;
 
-    function touchMoveInit(e) {
+    function touchMoveInit(e : React.TouchEvent<HTMLDivElement>) {
         e.stopPropagation() ;
 
         setTouchMove(true) ;
     }
 
-    function touchMoveInitData(e) {
+    function touchMoveInitData(e : React.TouchEvent<HTMLDivElement>) {
         e.stopPropagation() ;
 
         setTouchMoveData(true) ;
     }
 
-    function clickCover(e) {
+    function clickCover(e : React.TouchEvent<HTMLDivElement>) {
         e.stopPropagation() ;
 
         touchMove ? setTouchMove(false) : setCss(true) ;
     }
 
-    function clickData(e) {
+    function clickData(e : React.TouchEvent<HTMLDivElement>) {
         e.stopPropagation() ;
 
         touchMoveData ? setTouchMoveData(false) : setCss(false) ;
     }
 
-    const viewContentNumCheck = innerWidth => {
+    const viewContentNumCheck = ( innerWidth : number ) => {
         if( innerWidth <= mobileS ) {
             setMode468px(true) ;
             setCss(false) ;
@@ -291,8 +297,9 @@ const DetailPresenter = ({
         }
     }
 
-    const onResize = (e) => {
-        const { currentTarget : { innerWidth } } = e ;
+    const onResize = (e : UIEvent) => {
+        const { currentTarget } = e ;
+        const { innerWidth } = currentTarget as any ; 
 
         viewContentNumCheck(innerWidth) ;
     }
@@ -321,7 +328,7 @@ const DetailPresenter = ({
                 spaceBetween = { 30 }
                 onSlideChangeTransitionStart = { () => { if(mode468px) setCss(false) } }
             >
-                { slideLoadData && slideLoadData.map(( data, index ) =>  {
+                { slideLoadData && slideLoadData.map(( data : any, index : number ) =>  {
 
                     const { result, resultRent } = data ;
                     let canSee = null ;
@@ -335,7 +342,7 @@ const DetailPresenter = ({
                     }
                     
                     return (
-                        <SwiperSlide key={index} width="none" height="none">
+                        <SwiperSlide key={index}>
                             <Container>
                                 <Backdrop 
                                     bgImage={`https://image.tmdb.org/t/p/original${result.backdrop_path}`}
@@ -346,13 +353,13 @@ const DetailPresenter = ({
                                             `https://image.tmdb.org/t/p/original${result.poster_path}` 
                                             : require("../../assets/noPoster.jpg")}
                                         onTouchMove={ touchMoveInit }
-                                        onTouchEnd={ mode468px ? clickCover : null }
+                                        onTouchEnd={ (e) => mode468px ? clickCover(e) : null }
                                     >
                                     <Data 
                                         display={ css ? 'block' : 'none' }
                                         backgroundColor={ mode468px ? 'rgba(0, 0, 0, 0.8)' : 'none' }
                                         onTouchMove={ touchMoveInitData }
-                                        onTouchEnd={ mode468px ? clickData : null }
+                                        onTouchEnd={ (e) => mode468px ? clickData(e) : null }
                                     >
                                         <Title>{result.original_title ? result.original_title : result.original_name}</Title>
                                         <ItemContainer>
@@ -365,16 +372,17 @@ const DetailPresenter = ({
                                             <Item>
                                                 {result.runtime ? 
                                                 result.runtime 
-                                                : result.episode_run_time}분
+                                                : result.episode_run_time}min
                                             </Item>
                                             <Divider>.</Divider>
                                             <Item>
-                                                {result.genres && 
-                                                result.genres.map((genre, index) => 
-                                                    index === result.genres.length - 1 ? 
-                                                    genre.name 
-                                                    : `${genre.name} / `
-                                                )}
+                                                { 
+                                                    result.genres!.map((genre : any, index : number) => 
+                                                        index === result.genres.length - 1 ? 
+                                                        genre.name 
+                                                        : `${genre.name} / `
+                                                    )
+                                                }
                                             </Item>
                                         </ItemContainer>
                                         <OverView>{result.overview}</OverView>
@@ -391,19 +399,28 @@ const DetailPresenter = ({
                                     </Cover>
                                     { mode468px ? null : <VideoContainer>
                                             <Video 
-                                                src = { result.videos.results &&  result.videos.results.length > 0 && `https://www.youtube.com/embed/${result.videos.results[0].key}`} 
+                                                src = { result.videos.results!.length > 0 ? `https://www.youtube.com/embed/${result.videos.results[0].key}` : '' } 
                                                 frameborder = "0"
                                                 allowfullscreen
                                             />
                                     </VideoContainer>}
                                 </Content>
-                                { mode468px ? <VideoContainer>
-                                            <Video 
-                                                src={ result.videos.results &&  result.videos.results.length > 0 &&`https://www.youtube.com/embed/${result.videos.results[0].key}`} 
-                                                frameborder = "0"
-                                                allowfullscreen
-                                            />
-                                    </VideoContainer> : null }
+                                { mode468px ? (
+                                    <VideoContainer>
+                                        <Video 
+                                            src={ result.videos.results!.length > 0 ? `https://www.youtube.com/embed/${result.videos.results[0].key}` : '' } 
+                                            frameborder = "0"
+                                            allowfullscreen
+                                        />
+                                    </VideoContainer>) : (
+                                    <VideoContainer>
+                                        <Video 
+                                            src = { result.videos.results!.length > 0 ? `https://www.youtube.com/embed/${result.videos.results[0].key}` : '' } 
+                                            frameborder = "0"
+                                            allowfullscreen
+                                        />
+                                    </VideoContainer>
+                                )}
                                 { error && <Error text={error} color="red"/> }
                             </Container>
                         </SwiperSlide>

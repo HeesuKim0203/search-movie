@@ -29,7 +29,12 @@ const Grid = styled.div`
     }
 ` ;
 
-const Section = ({ title, children }) => (
+type SectionProps = {
+    title : string
+    children : React.ReactNode[]
+}
+
+const Section = ({ title, children } : SectionProps) => (
     <Container>
         <Title>{ title }</Title>
         <Grid>{ children }</Grid>
