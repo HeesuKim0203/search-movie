@@ -15,7 +15,7 @@ const Container = styled.div`
 
 const FixedMenu = () => {
 
-    function onClickScrollTop(e) {
+    function onClickScrollTop(event : React.MouseEvent<HTMLDivElement, MouseEvent>) {
         window.scroll({
             behavior : 'smooth',
             top : 0
@@ -23,8 +23,8 @@ const FixedMenu = () => {
     }
 
     return (
-        <Container onClick={onClickScrollTop}>
-            <FontAwesomeIcon icon={faArrowAltCircleUp} size="3x" />
+        <Container onClick = { onClickScrollTop }>
+            <FontAwesomeIcon icon = { faArrowAltCircleUp } size="3x" />
         </Container>
     );
 };

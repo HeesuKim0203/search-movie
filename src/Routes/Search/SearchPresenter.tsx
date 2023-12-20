@@ -23,6 +23,17 @@ const Input = styled.input`
     width : 100% ;
 `;
 
+type SearchPresenterProps = {
+    movieResultsIdList : number[]
+    showResultsIdList : number[]
+    movieResults : any
+    showResults : any
+    loading : boolean
+    error : string
+    handleSubmit : React.FormEventHandler<HTMLFormElement>
+    updateTerm : React.ChangeEventHandler<HTMLInputElement>
+}
+
 const SearchPresenter = ({ 
     movieResultsIdList,
     showResultsIdList,
@@ -31,18 +42,18 @@ const SearchPresenter = ({
     loading, 
     error, 
     handleSubmit,
-    updateTerm }) => (
+    updateTerm } : SearchPresenterProps) => (
         <Container>
             <Helmet>
                 <title>Search | Search Media</title>
             </Helmet>
             <Form onSubmit = {handleSubmit}>
-                <Input placeholder="Search Movies or TV Shows..." onChange={updateTerm}/>
+                <Input placeholder="Search Movies or TV Shows..." onChange = {updateTerm}/>
             </Form>
             { loading ? <Loader/> : <>
                 {movieResults && movieResults.length >0 &&
                     <Section title="Moive Results">
-                        {movieResults.map(movie => (
+                        {movieResults.map((movie : any) => (
                             <Poster 
                                 key = {movie.id} 
                                 id = {movie.id}
@@ -57,7 +68,7 @@ const SearchPresenter = ({
                     </Section>}
                 {showResults && showResults.length >0 &&
                     <Section title="Show Results">
-                        {showResults.map(show => (
+                        {showResults.map((show : any) => (
                             <Poster 
                                 key = {show.id} 
                                 id = {show.id}  

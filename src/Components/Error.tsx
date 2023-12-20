@@ -13,7 +13,12 @@ const Text = styled.span`
     font-weight : 500 ;
 `;
 
-const Error = ({ text, color }) => (
+type ErrorProps = {
+    text : string
+    color : string
+}
+
+const Error = ({ text, color } : ErrorProps) => (
     <Contanier>
         <Text color={color}>{text}</Text>
     </Contanier>

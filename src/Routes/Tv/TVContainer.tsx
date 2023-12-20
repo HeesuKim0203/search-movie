@@ -4,14 +4,14 @@ import { TVApi } from '../../api' ;
 
 export default class TVcontainer extends Component {
     state = {
-        topRated : null,
-        popular : null,
-        airingToday : null,
+        topRated : [],
+        popular : [],
+        airingToday : [],
         loading : true,
-        error : null,
-        topRatedIdList : null,
-        popularIdList : null,
-        airingTodayIdList : null
+        error : '',
+        topRatedIdList : [],
+        popularIdList : [],
+        airingTodayIdList : []
     }
     async componentDidMount() {
 
@@ -46,8 +46,8 @@ export default class TVcontainer extends Component {
         }
     }
 
-    setIdArr = arr => {
-        return arr.map(data => data.id) ;
+    setIdArr = (arr : any) => {
+        return arr.map((data : any) => data.id) ;
     }
 
    render() { 
