@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components' ;
 
 const Contanier = styled.div`
-    width : 100vw ;
+    width : 100% ;
     display : flex ;
     justify-content : center ;
 `;
