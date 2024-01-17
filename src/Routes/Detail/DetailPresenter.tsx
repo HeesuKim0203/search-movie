@@ -184,7 +184,7 @@ const OverView = styled.p`
     text-overflow : ellipsis ;
     word-break : break-all ;
     -webkit-box-orient : vertical ;
-    -webkit-line-clamp : 6 ;
+    -webkit-line-clamp : 5 ;
 
     @media ${props => props.theme.mobileS} {
         font-size : 12px ;
@@ -202,7 +202,7 @@ const RentUl = styled.ul`
     display : flex ;
     align-items : center ;
 
-    margin-top : 30px ;
+    margin-top : 15px ;
 
     @media ${props => props.theme.mobileS} {
         margin-top : 10px ;
@@ -340,7 +340,6 @@ const DetailPresenter = ({
         viewContentNumCheck(innerWidth) ;
 
         window.addEventListener('resize', onResize, false) ;
-        
     
         return () => {
           window.removeEventListener('resize', onResize, false) ;
