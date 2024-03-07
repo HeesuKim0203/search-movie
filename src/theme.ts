@@ -3,7 +3,7 @@ export const size = {
     tabletL : 1220,
     tabletS : 1024,
     mobileL : 768,
-    mobileS : 468  
+    mobileS : 768  
 }
 
 const theme = {

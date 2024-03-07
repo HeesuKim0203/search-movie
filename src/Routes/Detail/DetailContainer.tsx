@@ -128,15 +128,17 @@ class DetailContaniner extends Component<DetailContaninerProps, {}>  {
                     resultRent : results
                 }
 
-                const indexId = idList.findIndex((idData : number) => idData === Number(parseId))
+                const indexId = idList.findIndex((idData : number) => idData === Number(parseId)) ;
                 idList.splice(indexId, 1) ;
+
+                console.log("idList : ", idList)
                 
                 for(let i = 0 ; i < idList.length ; i++) {
                     this.getDataNotAsyncMovie(idList[i]) ;
                 }
 
                 this.setState({
-                    slideLoadData : [ ...slideLoadData, dataObj ],
+                    slideLoadData : slideLoadData.concat(dataObj),
                 }) ;
 
             }else {

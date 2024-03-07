@@ -74,14 +74,11 @@ const DataContainer = styled.div<{ display : string, backgroundColor : string }>
     flex-direction : column ;
 
     @media ${props => props.theme.mobileS} {
-        flex : 0 ;
         padding : 10px ;
-
-        position : absolute ;
 
         float : left ;
 
-        width : 340px ;
+        width : 100% ;
         height : 500px ;
     }
 `;
@@ -107,6 +104,7 @@ const Cover = styled.div<{ bgImage : string }>`
     background-size : cover ;
 
     @media ${props => props.theme.mobileS} {
+        display : flex ;
         float : left ;
         width : 100% ;
         height : 100% ;
@@ -291,25 +289,13 @@ const DetailPresenter = ({
     const [ touchMove, setTouchMove ] = useState(false) ;
     const [ touchMoveData, setTouchMoveData ] = useState(false) ;
 
-    function touchMoveInit(e : React.TouchEvent<HTMLDivElement>) {
-        e.stopPropagation() ;
-
-        setTouchMove(true) ;
-    }
-
-    function touchMoveInitData(e : React.TouchEvent<HTMLDivElement>) {
-        e.stopPropagation() ;
-
-        setTouchMoveData(true) ;
-    }
-
-    function clickCover(e : React.TouchEvent<HTMLDivElement>) {
+    function clickCover(e : React.MouseEvent<HTMLDivElement, MouseEvent>) {
         e.stopPropagation() ;
 
         touchMove ? setTouchMove(false) : setCss(true) ;
     }
 
-    function clickData(e : React.TouchEvent<HTMLDivElement>) {
+    function clickData(e : React.MouseEvent<HTMLDivElement, MouseEvent>) {
         e.stopPropagation() ;
 
         touchMoveData ? setTouchMoveData(false) : setCss(false) ;
@@ -355,6 +341,8 @@ const DetailPresenter = ({
             <Swiper
                 spaceBetween = { 30 }
                 onSlideChangeTransitionStart = { () => { if(mode468px) setCss(false) } }
+                allowSlideNext = { false }
+                allowSlidePrev = { false }
             >
                 { slideLoadData && slideLoadData.map(( data : any, index : number ) =>  {
 
@@ -376,66 +364,124 @@ const DetailPresenter = ({
                                     bgImage={`https://image.tmdb.org/t/p/original${result.backdrop_path}`}
                                 />
                                 <Content>
-                                    <Cover  
-                                        bgImage={result.poster_path ? 
-                                            `https://image.tmdb.org/t/p/original${result.poster_path}` 
-                                            : require("../../assets/noPoster.jpg")}
-                                        onTouchMove={ touchMoveInit }
-                                        onTouchEnd={ (e) => mode468px ? clickCover(e) : null }
-                                    />
-                                    <DataContainer 
-                                        display={ css ? 'flex' : 'none' }
-                                        backgroundColor={ mode468px ? 'rgba(0, 0, 0, 0.8)' : 'none' }
-                                    >
-                                        <Data 
-                                            //display={ css ? 'block' : 'none' }
-                                            //backgroundColor={ mode468px ? 'rgba(0, 0, 0, 0.8)' : 'none' }
-                                            onTouchMove={ touchMoveInitData }
-                                            onTouchEnd={ (e) => mode468px ? clickData(e) : null }
+                                { !mode468px ? ( 
+                                    <>
+                                        <Cover  
+                                            bgImage={result.poster_path ? 
+                                                `https://image.tmdb.org/t/p/original${result.poster_path}` 
+                                                : require("../../assets/noPoster.jpg")}
+                                            onClick ={ (e) => mode468px ? clickCover(e) : null }
+                                        />
+                                        <DataContainer 
+                                            display={ css ? 'flex' : 'none' }
+                                            backgroundColor={ mode468px ? 'rgba(0, 0, 0, 0.8)' : 'none' }
                                         >
-                                            <Title>{result.original_title ? result.original_title : result.original_name}</Title>
-                                            <ItemContainer>
-                                                <Item>
-                                                    {result.release_date ? 
-                                                    result.release_date.substring(0, 7)
-                                                    : result.first_air_date.substring(0, 7)}
-                                                </Item>
-                                                <Divider>.</Divider>
-                                                <Item>
-                                                    {result.runtime ? 
-                                                    result.runtime 
-                                                    : result.episode_run_time}min
-                                                </Item>
-                                                <Divider>.</Divider>
-                                                <Item>
-                                                    { 
-                                                        result.genres!.map((genre : any, index : number) => 
-                                                            index === result.genres.length - 1 ? 
-                                                            genre.name 
-                                                            : `${genre.name} / `
-                                                        )
-                                                    }
-                                                </Item>
-                                            </ItemContainer>
-                                            <OverView>{result.overview}</OverView>
-                                            <RentUl>
-                                                {canSee && canSee.map((data, index) =>
-                                                    <RentLi key={index}>
-                                                        <RentTitle>{data.provider_name}</RentTitle>
-                                                        <LogoImageWrapper>
-                                                            <LogoImage bgImage={`https://image.tmdb.org/t/p/original${data.logo_path}`}/>
-                                                        </LogoImageWrapper>
-                                                    </RentLi>)}
-                                            </RentUl>
-                                        </Data>
-                                        { mode468px ? null : <VideoContainer>
-                                                <Video 
-                                                    src = { result.videos.results!.length > 0 ? `https://www.youtube.com/embed/${result.videos.results[0].key}` : '' } 
-                                                    frameborder = "0"
-                                                    allowfullscreen
-                                                />
-                                        </VideoContainer>}
-                                    </DataContainer>
+                                            <Data
+                                                onClick = { (e) => mode468px ? clickData(e) : null }
+                                            >
+                                                <Title>{result.original_title ? result.original_title : result.original_name}</Title>
+                                                <ItemContainer>
+                                                    <Item>
+                                                        {result.release_date ? 
+                                                        result.release_date.substring(0, 7)
+                                                        : result.first_air_date.substring(0, 7)}
+                                                    </Item>
+                                                    <Divider>.</Divider>
+                                                    <Item>
+                                                        {result.runtime ? 
+                                                        result.runtime 
+                                                        : result.episode_run_time}min
+                                                    </Item>
+                                                    <Divider>.</Divider>
+                                                    <Item>
+                                                        { 
+                                                            result.genres!.map((genre : any, index : number) => 
+                                                                index === result.genres.length - 1 ? 
+                                                                genre.name 
+                                                                : `${genre.name} / `
+                                                            )
+                                                        }
+                                                    </Item>
+                                                </ItemContainer>
+                                                <OverView>{result.overview}</OverView>
+                                                <RentUl>
+                                                    {canSee && canSee.map((data, index) =>
+                                                        <RentLi key={index}>
+                                                            <RentTitle>{data.provider_name}</RentTitle>
+                                                            <LogoImageWrapper>
+                                                                <LogoImage bgImage={`https://image.tmdb.org/t/p/original${data.logo_path}`}/>
+                                                            </LogoImageWrapper>
+                                                        </RentLi>)}
+                                                </RentUl>
+                                            </Data>
+                                            { mode468px ? null : <VideoContainer>
+                                                    <Video 
+                                                        src = { result.videos.results!.length > 0 ? `https://www.youtube.com/embed/${result.videos.results[0].key}` : '' } 
+                                                        frameborder = "0"
+                                                        allowfullscreen
+                                                    />
+                                            </VideoContainer>}
+                                        </DataContainer>
+                                    </>
+                                    ) : (
+                                        <Cover  
+                                            bgImage={result.poster_path ? 
+                                                `https://image.tmdb.org/t/p/original${result.poster_path}` 
+                                                : require("../../assets/noPoster.jpg")}
+                                            onClick ={ (e) => mode468px ? clickCover(e) : null }
+                                        >
+                                            <DataContainer 
+                                                display={ css ? 'flex' : 'none' }
+                                                backgroundColor={ mode468px ? 'rgba(0, 0, 0, 0.8)' : 'none' }
+                                            >
+                                                <Data
+                                                    onClick = { (e) => mode468px ? clickData(e) : null }
+                                                >
+                                                    <Title>{result.original_title ? result.original_title : result.original_name}</Title>
+                                                    <ItemContainer>
+                                                        <Item>
+                                                            {result.release_date ? 
+                                                            result.release_date.substring(0, 7)
+                                                            : result.first_air_date.substring(0, 7)}
+                                                        </Item>
+                                                        <Divider>.</Divider>
+                                                        <Item>
+                                                            {result.runtime ? 
+                                                            result.runtime 
+                                                            : result.episode_run_time}min
+                                                        </Item>
+                                                        <Divider>.</Divider>
+                                                        <Item>
+                                                            { 
+                                                                result.genres!.map((genre : any, index : number) => 
+                                                                    index === result.genres.length - 1 ? 
+                                                                    genre.name 
+                                                                    : `${genre.name} / `
+                                                                )
+                                                            }
+                                                        </Item>
+                                                    </ItemContainer>
+                                                    <OverView>{result.overview}</OverView>
+                                                    <RentUl>
+                                                        {canSee && canSee.map((data, index) =>
+                                                            <RentLi key={index}>
+                                                                <RentTitle>{data.provider_name}</RentTitle>
+                                                                <LogoImageWrapper>
+                                                                    <LogoImage bgImage={`https://image.tmdb.org/t/p/original${data.logo_path}`}/>
+                                                                </LogoImageWrapper>
+                                                            </RentLi>)}
+                                                    </RentUl>
+                                                </Data>
+                                                { mode468px ? null : <VideoContainer>
+                                                        <Video 
+                                                            src = { result.videos.results!.length > 0 ? `https://www.youtube.com/embed/${result.videos.results[0].key}` : '' } 
+                                                            frameborder = "0"
+                                                            allowfullscreen
+                                                        />
+                                                </VideoContainer>}
+                                            </DataContainer>
+                                        </Cover>                        
+                                    )}
                                 </Content>
                                 { mode468px ? (
                                     <VideoContainer>
