@@ -5,12 +5,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
 import { faArrowAltCircleUp } from '@fortawesome/free-solid-svg-icons'
 
 const Container = styled.div`
+    display : none ;
     position : fixed ;
 
     bottom : 5px ;
     right : 5px ;
 
     z-index : 100 ;
+
+    @media ${props => props.theme.mobileS} {
+        display : block ;
+    }
 `;
 
 const FixedMenu = () => {
